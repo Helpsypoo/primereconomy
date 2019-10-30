@@ -7,7 +7,7 @@ public class AgentController : MonoBehaviour
     public GameObject home;
 
     private GameObject target = null;
-    private int mode = 0; //0 for wood, 1 for food
+    private int mode = 1; //0 for wood, 1 for food
     private GameObject heldObject = null;
 
     public float walkSpeed = 15.0f;
@@ -32,11 +32,11 @@ public class AgentController : MonoBehaviour
               {
                 case 0:
                   Debug.Log("Finding wood");
-                  target = FindClosestGoodWithTag("wood");
+                  target = FindClosestHarvestableWithTag("wood");
                   break;
                 case 1:
                   Debug.Log("Finding food");
-                  target = FindClosestGoodWithTag("food");
+                  target = FindClosestHarvestableWithTag("food");
                   break;
               }
               Debug.Log(target.name);
@@ -65,8 +65,7 @@ public class AgentController : MonoBehaviour
                   heldObject = target.GetComponent<TreeController>().HandleHarvest();
                   break;
                 case 1:
-                  //TODO: FoodController
-                  //heldObject = target.GetComponent<FoodController>().HandleHarvest();
+                  heldObject = target.GetComponent<FruitController>().HandleHarvest();
                   break;
               }
               heldObject.transform.parent = gameObject.transform;
@@ -135,9 +134,14 @@ public class AgentController : MonoBehaviour
           //heading = heading / distance; //Normalize heading
 
           //transform.Translate(heading * Time.deltaTime * walkSpeed); //, Space.World
+          Vector3 groundTarget = new Vector3(
+            target.transform.position.x,
+            0,
+            target.transform.position.z
+          );
           gameObject.transform.position = Vector3.MoveTowards(
               gameObject.transform.position,
-              target.transform.position,
+              groundTarget,
               Time.deltaTime * walkSpeed
           );
 
@@ -167,10 +171,11 @@ public class AgentController : MonoBehaviour
 
     }
 
-    public GameObject FindClosestGoodWithTag(string tag)
+    public GameObject FindClosestHarvestableWithTag(string tag)
     {
         GameObject[] goods;
         goods = GameObject.FindGameObjectsWithTag(tag);
+
         GameObject closest = null;
         float distance = Mathf.Infinity;
         Vector3 position = transform.position;
@@ -180,8 +185,11 @@ public class AgentController : MonoBehaviour
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance)
             {
-                closest = go;
-                distance = curDistance;
+                if (go.GetComponent<HarvestableController>().harvested == false)
+                {
+                  closest = go;
+                  distance = curDistance;
+                }
             }
         }
         return closest;
