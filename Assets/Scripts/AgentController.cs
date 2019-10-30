@@ -7,13 +7,17 @@ public class AgentController : MonoBehaviour
     public GameObject home;
 
     private GameObject target = null;
-    private int mode = 0; //0 for wood, 1 for food
+    private int mode; //0 for wood, 1 for fruit
     private GameObject heldObject = null;
 
     public float walkSpeed = 15.0f;
     public float turnSpeed = 15.0f;
     public float harvestDistance = 3.0f;
     public float homeDistance = 0.1f;
+
+    public float collectionTime = 10.0f; //seconds
+    public float accelerationFactor = 1.0f; //For speeding up sims later on
+    public float woodCollectionTimeRatio = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +28,19 @@ public class AgentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+      if (Time.time < collectionTime)
+      {
         if (heldObject == null) {
+            //Check time allocation
+            if (Time.time < woodCollectionTimeRatio * collectionTime)
+            {
+              mode = 0; //Collect wood
+            }
+            else
+            {
+              mode = 1; //Collect fruit
+            }
+
             //Pick target
             if (target == null)
             {
@@ -35,11 +51,11 @@ public class AgentController : MonoBehaviour
                   target = FindClosestHarvestableWithTag("wood");
                   break;
                 case 1:
-                  Debug.Log("Finding food");
-                  target = FindClosestHarvestableWithTag("food");
+                  Debug.Log("Finding fruit");
+                  target = FindClosestHarvestableWithTag("fruit");
                   break;
               }
-              Debug.Log(target.name);
+              //Debug.Log(target.name);
 
               //TODO: Handle the case where no more potential targets remain
             }
@@ -55,18 +71,14 @@ public class AgentController : MonoBehaviour
             }
         }
         else {
-          target = home;
-
-          if (GoToTargetIfNotThere(homeDistance))
-          {}
-          else
-          {
-            heldObject.transform.parent = null;
-            heldObject = null;
-            target = null;
-          }
+          GoHome(homeDistance);
         }
           //TODO: Animate movement of heldObject
+      }
+      else
+      {
+        GoHome(0);
+      }
     }
 
     private bool GoToTargetIfNotThere(float goalDistance)
@@ -96,7 +108,7 @@ public class AgentController : MonoBehaviour
           float yGoalAngle = -Mathf.Atan2(heading.z, heading.x);
           float yAngleDiff = yGoalAngle - transform.eulerAngles.y * Mathf.Deg2Rad;
           //Debug.Log(yGoalAngle * Mathf.Rad2Deg);
-          Debug.Log(transform.eulerAngles.y);
+          //Debug.Log(transform.eulerAngles.y);
           //Debug.Log(yAngleDiff * Mathf.Rad2Deg);
           while (yAngleDiff > Mathf.PI) {yAngleDiff -= 2 * Mathf.PI;}
           while (yAngleDiff < -Mathf.PI) {yAngleDiff += 2 * Mathf.PI;}
@@ -115,7 +127,23 @@ public class AgentController : MonoBehaviour
       {
         return false;
       }
+    }
 
+    private void GoHome(float goalDistance)
+    {
+      target = home;
+
+      if (GoToTargetIfNotThere(goalDistance))
+      {}
+      else
+      {
+        if (heldObject != null)
+        {
+          heldObject.transform.parent = null;
+          heldObject = null;
+        }
+        target = null;
+      }
     }
 
     public GameObject FindClosestHarvestableWithTag(string tag)
