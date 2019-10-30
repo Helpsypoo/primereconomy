@@ -7,7 +7,7 @@ public class AgentController : MonoBehaviour
     public GameObject home;
 
     private GameObject target = null;
-    private int mode = 1; //0 for wood, 1 for food
+    private int mode = 0; //0 for wood, 1 for food
     private GameObject heldObject = null;
 
     public float walkSpeed = 15.0f;
@@ -18,7 +18,7 @@ public class AgentController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      //target = gameObject; //Target self to avoid null
+
     }
 
     // Update is called once per frame
@@ -44,46 +44,19 @@ public class AgentController : MonoBehaviour
               //TODO: Handle the case where no more potential targets remain
             }
 
-            //Move toward target
-            /*Vector3 heading = target.transform.position - transform.position;
-            heading = new Vector3 (heading.x, 0, heading.z); //project to xz plane
-            float distance = heading.magnitude;
-            if (distance > harvestDistance)
-            {
-                heading = heading / distance; //Normalize heading
-                transform.Translate(heading * Time.deltaTime * walkSpeed); //, Space.World
-            }
-            */
             if (GoToTargetIfNotThere(harvestDistance))
             {}
             else
             {
               //Harvest
-              switch(mode)
-              {
-                case 0:
-                  heldObject = target.GetComponent<TreeController>().HandleHarvest();
-                  break;
-                case 1:
-                  heldObject = target.GetComponent<FruitController>().HandleHarvest();
-                  break;
-              }
+              heldObject = target.GetComponent<HarvestableController>().HandleHarvest();
               heldObject.transform.parent = gameObject.transform;
               //TODO: Animate movement of heldObject
             }
         }
         else {
           target = home;
-          /*
-          Vector3 heading = target.transform.position - transform.position;
-          heading = new Vector3 (heading.x, 0, heading.z); //project to xz plane
-          float distance = heading.magnitude;
-          if (distance > 0.1) //TODO: Handle this better
-          {
-              heading = heading / distance; //Normalize heading
-              transform.Translate(heading * Time.deltaTime * walkSpeed); //, Space.World
-          }
-          */
+
           if (GoToTargetIfNotThere(homeDistance))
           {}
           else
@@ -93,33 +66,7 @@ public class AgentController : MonoBehaviour
             target = null;
           }
         }
-
-
-
-
-
-        /*else if (heldObject == null)
-        {
-          //Harvest
-          //GameObject toHarvest = null; //apparently assigning to null avoids
-                                       //compiling errors
-          //Copied from above switch, could surely make more compact
-          switch(mode)
-          {
-            case 1:
-              heldObject = target.GetComponent<TreeController>().HandleHarvest();
-              break;
-            case 2:
-              //toHarvest = target.GetComponent<FoodController>().HandleHarvest();
-              break;
-          }
-          Debug.Log("Grabbing " + heldObject.name);
-
-          heldObject.transform.parent = gameObject.transform;
-
           //TODO: Animate movement of heldObject
-        }
-        */
     }
 
     private bool GoToTargetIfNotThere(float goalDistance)

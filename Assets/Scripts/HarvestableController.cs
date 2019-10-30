@@ -19,4 +19,10 @@ public class HarvestableController : MonoBehaviour
     {
 
     }
+
+    public virtual GameObject HandleHarvest()
+    {
+      harvested = true;
+      return gameObject;
+    }
 }

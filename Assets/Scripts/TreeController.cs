@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class TreeController : HarvestableController
 {
-    //public bool alive = true;
-    //public bool harvested = false;
     private float logSpawnHeight = 1.0f;
-    //private bool harvested = false;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +18,7 @@ public class TreeController : HarvestableController
 
     }
 
-    public GameObject HandleHarvest()
+    public override GameObject HandleHarvest()
     {
       //GameObject log = Instantiate(log, tree.transform);
       //return log;

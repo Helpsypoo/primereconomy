@@ -7,8 +7,7 @@ public class ForestManager : MonoBehaviour
     public GameObject tree;
     public int numTrees = 10;
     public float radius = 10f;
-    public GameObject wood; //For TreeController to reference when being harvested
-    //private GameObject[] trees;
+    public GameObject wood;
 
     public GameObject mango;
     public int mangoYield = 1;
