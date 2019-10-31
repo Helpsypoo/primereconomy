@@ -16,7 +16,7 @@ public class AgentController : MonoBehaviour
     public float deliverDistance = 0.1f;
 
     public float collectionTime = 10.0f; //seconds
-    //public float accelerationFactor = 1.0f; //For speeding up sims later on
+    //public float accelerationFactor = 1.0f; //For speeding up sims later on.
     public float woodCollectionTimeRatio = 0.5f;
     private bool dayOver = false;
 
