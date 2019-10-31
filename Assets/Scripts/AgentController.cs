@@ -90,36 +90,21 @@ public class AgentController : MonoBehaviour
       float distance = heading.magnitude;
       if (distance > goalDistance)
       {
-          //heading = heading / distance; //Normalize heading
-
-          //transform.Translate(heading * Time.deltaTime * walkSpeed); //, Space.World
           Vector3 groundTarget = new Vector3(
             target.transform.position.x,
             0,
             target.transform.position.z
           );
           gameObject.transform.position = Vector3.MoveTowards(
-              gameObject.transform.position,
-              groundTarget,
-              Time.deltaTime * walkSpeed
+            gameObject.transform.position,
+            groundTarget,
+            Time.deltaTime * walkSpeed
           );
 
-          //Can't be the easiest way to rotate to face something over time
-          float yGoalAngle = -Mathf.Atan2(heading.z, heading.x);
-          float yAngleDiff = yGoalAngle - transform.eulerAngles.y * Mathf.Deg2Rad;
-          //Debug.Log(yGoalAngle * Mathf.Rad2Deg);
-          //Debug.Log(transform.eulerAngles.y);
-          //Debug.Log(yAngleDiff * Mathf.Rad2Deg);
-          while (yAngleDiff > Mathf.PI) {yAngleDiff -= 2 * Mathf.PI;}
-          while (yAngleDiff < -Mathf.PI) {yAngleDiff += 2 * Mathf.PI;}
-          if (Mathf.Abs(yAngleDiff) > Time.deltaTime * turnSpeed)
-          {
-            yAngleDiff = Time.deltaTime * turnSpeed * Mathf.Sign(yAngleDiff);
-          }
-          yGoalAngle = transform.eulerAngles.y * Mathf.Deg2Rad + yAngleDiff;
-          Vector3 newEulerAngle = new Vector3 (0, Mathf.Rad2Deg * yGoalAngle, 0);
-          transform.eulerAngles = newEulerAngle;
-
+          Vector3 targetDir = groundTarget - transform.position;
+          float step = turnSpeed * Time.deltaTime;
+          Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+          transform.rotation = Quaternion.LookRotation(newDir);
 
           return true;
       }
