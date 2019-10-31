@@ -14,8 +14,8 @@ public class ForestManager : MonoBehaviour
     public float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
 
-    // Start is called before the first frame update
-    void Start()
+    // Awake is called before Start
+    void Awake()
     {
       for (int i = 0; i < numTrees; i++)
       {

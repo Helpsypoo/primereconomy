@@ -565,6 +565,11 @@ PrefabInstance:
       propertyPath: turnSpeed
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 3210892587225362872, guid: 57dd647c323b02e499f0b787a4137d9e,
+        type: 3}
+      propertyPath: deliverDistance
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1805518449, guid: 57dd647c323b02e499f0b787a4137d9e, type: 3}
       propertyPath: m_Enabled
       value: 0
