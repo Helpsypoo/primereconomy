@@ -35,7 +35,7 @@ public class EconomyManager : MonoBehaviour
       //If there were multiple agents, track doneness here
 
       //ReplenishForest
-      //forest.GetComponent<ForestManager>().ReplenishForest();
+      forest.GetComponent<ForestManager>().ReplenishForest();
       forestIsReady = true;
     }
 }

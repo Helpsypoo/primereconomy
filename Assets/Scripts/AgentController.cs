@@ -124,6 +124,8 @@ public class AgentController : MonoBehaviour
       {
         yield return null;
       }
+      target = null;
+      mode = 0;
       econManager.AgentIsDone(gameObject);
     }
 
