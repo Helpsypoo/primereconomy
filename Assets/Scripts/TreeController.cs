@@ -27,8 +27,8 @@ public class TreeController : HarvestableController
       GameObject logPrefab = gameObject.GetComponentInParent<ForestManager>().wood;
       GameObject log = Instantiate(logPrefab, logSpawnPos, logPrefab.transform.rotation);
 
+      //TODO make this work for more than or less than one fruit
       GameObject fruit = gameObject.transform.GetChild(0).gameObject;
-      //TODO make this work for more than one fruit
       fruit.transform.parent = null;
       Rigidbody fruitRb = fruit.GetComponent<Rigidbody>();//gameObject.GetComponentInChildren<Rigidbody>();
       fruitRb.useGravity = true;

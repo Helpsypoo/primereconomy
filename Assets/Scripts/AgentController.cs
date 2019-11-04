@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AgentController : MonoBehaviour
@@ -18,12 +19,18 @@ public class AgentController : MonoBehaviour
     public int numTreesHarvested = 0;
     public int numMangoesHarvested = 0;
 
-    public float woodCollectionTimeRatio = 0.5f;
-    //TODO: Control time ratio in EconomyManager
+    //temporary fixed array of time ratios
+    private const int numRatios = 11;
+    private float[] ratios = new float[numRatios];
+    public float woodCollectionTimeRatio;
+
+
     public float collectionTime = 10.0f; //seconds
     //public float accelerationFactor = 1.0f; //For speeding up sims later on.
     private float startTime;
     public bool dayOver = true;
+
+    public List<AgentDay> activityLog = new List<AgentDay>();
 
     void Awake()
     {
@@ -31,6 +38,13 @@ public class AgentController : MonoBehaviour
       //though it doesn't seem preferable to have to assign it in the UI.
       //GameObject econManagerObject = GameObject.Find("EconomyManager");
       econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
+
+      //temporary fixed array of time ratios
+      for (int i = 0; i < numRatios; i++)
+      {
+        ratios[i] = (float)i / (float)(numRatios - 1);
+      }
+      Debug.Log(ratios);
     }
 
     // Update is called once per frame
@@ -42,8 +56,19 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    public void StartWorkDay()
+    void DetermineTimeAllocation(int date)
     {
+      //TODO: choose based on previous outcomes and utility function
+      woodCollectionTimeRatio = ratios[date % (numRatios - 1)];
+      Debug.Log(date);
+      Debug.Log(woodCollectionTimeRatio);
+    }
+
+    public void StartWorkDay(int date)
+    {
+      DetermineTimeAllocation(date);
+      activityLog.Add(new AgentDay(date, woodCollectionTimeRatio));
+
       startTime = Time.time;
       dayOver = false;
       StartCoroutine("GoHarvest");
@@ -124,8 +149,18 @@ public class AgentController : MonoBehaviour
       {
         yield return null;
       }
+
+      //Log day's outcome
+      activityLog.Last().numTreesHarvested = numTreesHarvested;
+      activityLog.Last().numMangoesHarvested = numMangoesHarvested;
+
+      //Reset state
       target = null;
       mode = 0;
+      numTreesHarvested = 0;
+      numMangoesHarvested = 0;
+
+      //Tell manager we're done
       econManager.AgentIsDone(gameObject);
     }
 

@@ -51,6 +51,7 @@ public class ForestManager : MonoBehaviour
             AddMango(trees[i], i * mangoYield + j);
           }
         }
+        //TODO: Replenish mangoes on surviving trees
       }
     }
 
