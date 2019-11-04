@@ -17,16 +17,26 @@ public class ForestManager : MonoBehaviour
     // Awake is called before Start
     void Awake()
     {
-      for (int i = 0; i < numTrees; i++)
-      {
-        AddTree();
-      }
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void PrepForest()
+    {
+      for (int i = 0; i < numTrees; i++)
+      {
+        AddTree();
+      }
+    }
+
+    public void ReplenishForest()
+    {
+      
     }
 
     void AddTree()

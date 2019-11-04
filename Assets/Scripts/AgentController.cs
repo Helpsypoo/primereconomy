@@ -5,6 +5,7 @@ using UnityEngine;
 public class AgentController : MonoBehaviour
 {
     public GameObject home;
+    private EconomyManager econManager;
 
     private GameObject target = null;
     private int mode; //0 for wood, 1 for fruit
@@ -14,31 +15,44 @@ public class AgentController : MonoBehaviour
     public float turnSpeed = 15.0f;
     public float harvestDistance = 3.0f;
     public float deliverDistance = 0.1f;
+    public int numTreesHarvested = 0;
+    public int numMangoesHarvested = 0;
 
+    public float woodCollectionTimeRatio = 0.5f;
+    //TODO: Control time ratio in EconomyManager
     public float collectionTime = 10.0f; //seconds
     //public float accelerationFactor = 1.0f; //For speeding up sims later on.
-    public float woodCollectionTimeRatio = 0.5f;
-    private bool dayOver = false;
+    private float startTime;
+    public bool dayOver = true;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-      StartCoroutine("GoHarvest");
+      //I'm certain there's a preferred way to do this,
+      //though it doesn't seem preferable to have to assign it in the UI.
+      //GameObject econManagerObject = GameObject.Find("EconomyManager");
+      econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-      if (Time.time > collectionTime)
+      if (Time.time - startTime > collectionTime)
       {
         dayOver = true;
       }
     }
 
+    public void StartWorkDay()
+    {
+      startTime = Time.time;
+      dayOver = false;
+      StartCoroutine("GoHarvest");
+    }
+
     IEnumerator GoHarvest()
     {
       //Check time allocation
-      if (Time.time < woodCollectionTimeRatio * collectionTime)
+      if (Time.time - startTime < woodCollectionTimeRatio * collectionTime)
       {
         mode = 0; //Collect wood
       }
@@ -54,9 +68,11 @@ public class AgentController : MonoBehaviour
         {
           case 0:
             target = FindClosestHarvestableWithTag("wood");
+            numTreesHarvested++;
             break;
           case 1:
             target = FindClosestHarvestableWithTag("fruit");
+            numMangoesHarvested++;
             break;
         }
         //TODO: Handle the case where no more potential targets remain
@@ -108,6 +124,7 @@ public class AgentController : MonoBehaviour
       {
         yield return null;
       }
+      econManager.AgentIsDone(gameObject);
     }
 
     private bool GoToTargetIfNotThere(float goalDistance = 0)
