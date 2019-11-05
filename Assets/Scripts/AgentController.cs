@@ -44,7 +44,6 @@ public class AgentController : MonoBehaviour
       {
         ratios[i] = (float)i / (float)(numRatios - 1);
       }
-      Debug.Log(ratios);
     }
 
     // Update is called once per frame
@@ -60,8 +59,6 @@ public class AgentController : MonoBehaviour
     {
       //TODO: choose based on previous outcomes and utility function
       woodCollectionTimeRatio = ratios[date % (numRatios - 1)];
-      Debug.Log(date);
-      Debug.Log(woodCollectionTimeRatio);
     }
 
     public void StartWorkDay(int date)
