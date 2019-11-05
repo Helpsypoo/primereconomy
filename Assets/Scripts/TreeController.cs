@@ -37,7 +37,6 @@ public class TreeController : HarvestableController
     void AddMango()
     {
       GameObject newMango = Instantiate(mango, gameObject.transform);
-      //mangoes[mangoIndex] = newMango;
       //TODO rotate mango
       //TODO put rotation and translation in Instantiate call
 
@@ -69,7 +68,7 @@ public class TreeController : HarvestableController
 
     int GetNumMangoes()
     {
-      //Almost certainly a more better way to do this
+      //Almost certainly a better way to do this
       int numMangoes = 0;
       for (int i = 0; i < fruitCapacity; i++)
       {
@@ -83,8 +82,6 @@ public class TreeController : HarvestableController
 
     public override GameObject HandleHarvest()
     {
-      //GameObject log = Instantiate(log, tree.transform);
-      //return log;
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
                                                         gameObject.transform.position.z);
       GameObject logPrefab = gameObject.GetComponentInParent<ForestManager>().wood;
@@ -96,9 +93,8 @@ public class TreeController : HarvestableController
         if (fruits[i] != null)
         {
           fruits[i].transform.parent = null;
-          Rigidbody fruitRb = fruits[i].GetComponent<Rigidbody>();//gameObject.GetComponentInChildren<Rigidbody>();
+          Rigidbody fruitRb = fruits[i].GetComponent<Rigidbody>();
           fruitRb.useGravity = true;
-          fruits[i] = null;
         }
       }
 

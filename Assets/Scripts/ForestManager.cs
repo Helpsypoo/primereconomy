@@ -10,7 +10,6 @@ public class ForestManager : MonoBehaviour
     public GameObject wood;
 
     public GameObject[] trees = new GameObject[numTrees];
-    //public GameObject[] mangoes = new GameObject[numTrees * mangoYield];
 
     // Awake is called before Start
     void Awake()
@@ -37,17 +36,27 @@ public class ForestManager : MonoBehaviour
       for (int i = 0; i < numTrees; i++)
       {
         TreeController tc = trees[i].GetComponent<TreeController>();
-        //Regrow harvested trees
-        if (trees[i].activeSelf == false)
+        //Regrow harvested trees and mangoes, handle mangoes on ground
+        if (tc.harvested == true)
         {
           trees[i].SetActive(true);
           tc.harvested = false;
+
+          //Set all of harvested tree's fruit to null, destroy unharvested fruit
+          for (int j = 0; j < tc.fruits.Length; j++)
+          {
+            if (tc.fruits[j] != null &&
+                tc.fruits[j].GetComponent<HarvestableController>().harvested == false)
+              {
+                Destroy(tc.fruits[j]);
+              }
+            tc.fruits[j] = null;
+          }
         }
         else {
           //Make sure harvested fruits are out of tree's fruit array
           //before replenishing fruit
-          //Might be cleaner to do this on harvest but would have to make
-          //a MangoController, I think.
+          //Might be cleaner to do this on harvest.
           for (int j = 0; j < tc.fruits.Length; j++)
           {
             if (tc.fruits[j] != null &&
@@ -58,7 +67,7 @@ public class ForestManager : MonoBehaviour
           }
         }
         tc.GrowMangoes();
-        //TODO: Have unharvested mangoes from harvested trees rot and disappear.
+
       }
     }
 

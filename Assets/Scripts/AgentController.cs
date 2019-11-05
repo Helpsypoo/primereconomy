@@ -122,10 +122,11 @@ public class AgentController : MonoBehaviour
       if (heldObject == null) {
         Debug.LogWarning("Agent is trying to deliver null in GoDeliver()");
       }
+      //Destroy(heldObject);
       heldObject.transform.parent = null;
       heldObject = null;
       target = null;
-      //TODO: Animate movement of heldObject
+      //TODO: Animate movement of heldObject to container, or something
 
       if (dayOver)
       {
