@@ -9,6 +9,7 @@ public class AgentDay
     public float timeAllocationRatio;
     public int numTreesHarvested;
     public int numMangoesHarvested;
+    public float utility;
 
     public AgentDay(int newDate, float ratio)
     {

@@ -20,16 +20,20 @@ public class AgentController : MonoBehaviour
     public int numMangoesHarvested = 0;
 
     //temporary fixed array of time ratios
-    private const int numRatios = 11;
-    private float[] ratios = new float[numRatios];
+    //private const int numRatios = 11;
+    //private float[] ratios = new float[numRatios];
+    //half hour increments if the work day is eight hours
+    private const float timeAllocationRatioIncrement = 0.0625f;
+    private float defaultAlloc = 5 * timeAllocationRatioIncrement;
     public float woodCollectionTimeRatio;
 
 
-    public float collectionTime = 10.0f; //seconds
+    public float collectionTime = 20.0f; //seconds
     //public float accelerationFactor = 1.0f; //For speeding up sims later on.
     private float startTime;
     public bool dayOver = true;
 
+    //Memory of day outcomes
     public List<AgentDay> activityLog = new List<AgentDay>();
 
     void Awake()
@@ -40,10 +44,10 @@ public class AgentController : MonoBehaviour
       econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
 
       //temporary fixed array of time ratios
-      for (int i = 0; i < numRatios; i++)
-      {
-        ratios[i] = (float)i / (float)(numRatios - 1);
-      }
+      //for (int i = 0; i < numRatios; i++)
+      //{
+      //  ratios[i] = (float)i / (float)(numRatios - 1);
+      //}
     }
 
     // Update is called once per frame
@@ -55,15 +59,84 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    void DetermineTimeAllocation(int date)
+    float Utility(int fruit, int wood)
     {
-      //TODO: choose based on previous outcomes and utility function
-      woodCollectionTimeRatio = ratios[date % (numRatios - 1)];
+      return Mathf.Log(fruit + 1, 2) + Mathf.Log(wood + 1, 2);
+    }
+
+    void DetermineTimeAllocation()
+    {
+      if (activityLog.Count() == 0)
+      {
+        woodCollectionTimeRatio = defaultAlloc;
+        return;
+      }
+
+      //TODO: Maybe refactor this
+      float bestUtility = 0f;
+      //float bestAlloc = -1.0f; //just something out of normal range to be replace
+      AgentDay bestDay = null;
+      float lowestAlloc = 1.0f; //To be replaced
+      float highestAlloc = 0.0f; //To be replaced
+
+      foreach (AgentDay day in activityLog)
+      {
+        //lowestAlloc?
+        if (day.timeAllocationRatio < lowestAlloc)
+        {
+          lowestAlloc = day.timeAllocationRatio;
+        }
+        //highestAlloc?
+        if (day.timeAllocationRatio > highestAlloc)
+        {
+          highestAlloc = day.timeAllocationRatio;
+        }
+        //bestDay?
+        if (day.utility > bestUtility)
+        {
+          bestUtility = day.utility;
+          bestDay = day;
+        }
+        //If equal to best day, take extreme allocs for exploration.
+        else if (day.utility == bestUtility &&
+                 (day.timeAllocationRatio == lowestAlloc ||
+                  day.timeAllocationRatio == highestAlloc)
+                )
+        {
+          bestDay = day;
+        }
+      }
+      //Check whether bestDay is at an allocation extreme
+      bool exploreUp = true;
+      bool exploreDown = true;
+
+      if (bestDay.timeAllocationRatio != highestAlloc) {exploreUp = false;}
+      if (bestDay.timeAllocationRatio != lowestAlloc) {exploreDown = false;}
+
+      float bestAlloc = bestDay.timeAllocationRatio;
+      //Decide where to explore
+      if (exploreUp && exploreDown)
+      {
+        woodCollectionTimeRatio = bestAlloc +
+          (Random.Range(0, 2) * 2 - 1) * timeAllocationRatioIncrement;
+      }
+      else if (exploreUp)
+      {
+        woodCollectionTimeRatio = bestAlloc + timeAllocationRatioIncrement;
+      }
+      else if (exploreDown)
+      {
+        woodCollectionTimeRatio = bestAlloc - timeAllocationRatioIncrement;
+      }
+      else
+      {
+        woodCollectionTimeRatio = bestAlloc;
+      }
     }
 
     public void StartWorkDay(int date)
     {
-      DetermineTimeAllocation(date);
+      DetermineTimeAllocation();
       activityLog.Add(new AgentDay(date, woodCollectionTimeRatio));
 
       startTime = Time.time;
@@ -149,8 +222,32 @@ public class AgentController : MonoBehaviour
       }
 
       //Log day's outcome
-      activityLog.Last().numTreesHarvested = numTreesHarvested;
-      activityLog.Last().numMangoesHarvested = numMangoesHarvested;
+      AgentDay day = activityLog.Last();
+      day.numTreesHarvested = numTreesHarvested;
+      day.numMangoesHarvested = numMangoesHarvested;
+      day.utility = Utility(numMangoesHarvested, numTreesHarvested);
+
+      //Testing
+      //Agent behavior assumes deterministic harvesting. Check that the new day
+      //is not evidence of variation. Warn if necessary.
+      //Will mostly function as a reminder to update agent behavior if harvesting
+      //is changed to something nondeterministic for visual/freshness reasons.
+      foreach (AgentDay otherDay in activityLog){
+        if (day.timeAllocationRatio == otherDay.timeAllocationRatio &&
+            day.utility != otherDay.utility)
+        {
+          string warning = "Day " + day.date.ToString() + " yielded " +
+            day.numTreesHarvested.ToString() + " trees and " + day.numMangoesHarvested.ToString() +
+            " mangoes with a ratio of " + day.timeAllocationRatio.ToString() +
+            ".@ Day " + otherDay.date.ToString() + " yielded " +
+            otherDay.numTreesHarvested.ToString() + " trees and " + otherDay.numMangoesHarvested.ToString() +
+            " mangoes with a ratio of " + otherDay.timeAllocationRatio.ToString() +
+            ".";
+          warning = warning.Replace("@", System.Environment.NewLine);
+
+          Debug.LogWarning(warning);
+        }
+      }
 
       //Reset state
       target = null;

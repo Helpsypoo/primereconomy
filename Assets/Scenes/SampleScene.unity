@@ -360,9 +360,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tree: {fileID: 839801207772564717, guid: 79dbca11bc3023e488b003d84bdbe899, type: 3}
-  radius: 10
+  radius: 15
   wood: {fileID: 1831481640832122599, guid: bf47349d3611ec345b677eb86e29f25d, type: 3}
   trees:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -381,7 +391,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610727553}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalPosition: {x: 10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -638,6 +648,11 @@ PrefabInstance:
         type: 3}
       propertyPath: dayOver
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3210892587225362872, guid: 57dd647c323b02e499f0b787a4137d9e,
+        type: 3}
+      propertyPath: collectionTime
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1805518449, guid: 57dd647c323b02e499f0b787a4137d9e, type: 3}
       propertyPath: m_Enabled

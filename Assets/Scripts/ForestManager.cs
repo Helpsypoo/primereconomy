@@ -5,8 +5,8 @@ using UnityEngine;
 public class ForestManager : MonoBehaviour
 {
     public GameObject tree;
-    public static int numTrees = 10;
-    public float radius = 10f;
+    public static int numTrees = 20;
+    public float radius = 15f;
     public GameObject wood;
 
     public GameObject[] trees = new GameObject[numTrees];
