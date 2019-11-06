@@ -179,7 +179,7 @@ public class AgentController : MonoBehaviour
       }
       //Harvest
       heldObject = target.GetComponent<HarvestableController>().HandleHarvest();
-      heldObject.transform.parent = gameObject.transform;
+      heldObject.transform.parent = transform;
       //TODO: Animate movement of heldObject
 
       StartCoroutine("GoDeliver");

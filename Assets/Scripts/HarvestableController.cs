@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class HarvestableController : MonoBehaviour
 {
-    //I would prefer to hide this from the editor, but it needs to be writable
-    //by subclasses and readable by AgentController
-    public bool harvested = false;
+    public bool harvested {get; protected set;}
 
     // Start is called before the first frame update
     void Start()
@@ -24,5 +22,7 @@ public class HarvestableController : MonoBehaviour
     {
       harvested = true;
       return gameObject;
+      //Returns gameObject rather than this because subclasses may return new
+      //game objects. The tree returns a wood object, for example.
     }
 }

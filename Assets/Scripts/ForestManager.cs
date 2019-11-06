@@ -39,8 +39,7 @@ public class ForestManager : MonoBehaviour
         //Regrow harvested trees and mangoes, handle mangoes on ground
         if (tc.harvested == true)
         {
-          trees[i].SetActive(true);
-          tc.harvested = false;
+          tc.RegrowTree();
 
           //Set all of harvested tree's fruit to null, destroy unharvested fruit
           for (int j = 0; j < tc.fruits.Length; j++)

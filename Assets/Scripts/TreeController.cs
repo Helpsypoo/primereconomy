@@ -25,6 +25,12 @@ public class TreeController : HarvestableController
 
     }
 
+    public void RegrowTree()
+    {
+      gameObject.SetActive(true);
+      harvested = false;
+    }
+
     public void GrowMangoes()
     {
       int numMangoes = GetNumMangoes();
