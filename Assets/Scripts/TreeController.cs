@@ -6,6 +6,9 @@ public class TreeController : HarvestableController
 {
     private float logSpawnHeight = 1.0f;
     private const int fruitCapacity = 4;  //Trees have room for four fruits
+
+    //This works kind of strangley, with indeces also determining which branch
+    //this fruit is on. I do like having the fixed-length array fruits, though.
     public HarvestableController[] fruits = new HarvestableController[fruitCapacity];
 
     public GameObject mango;
@@ -18,7 +21,7 @@ public class TreeController : HarvestableController
     // Start is called before the first frame update
     void Start()
     {
-      //Debug.Log(fruits[0]);
+
     }
 
     // Update is called once per frame

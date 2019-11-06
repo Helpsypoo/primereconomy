@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum GoalType
+{
+  Wood,
+  Fruit
+}
+
 public class EconomyManager : MonoBehaviour
 {
     public GameObject agent;
     private AgentController ac;
+    //TODO: Make EconomyManager spawn forests and instantiate controllers
+    //For now, just dragging a forest GameObject from scene.
     public GameObject forest;
-    public int date = 0;
-
+    public int date;
     private bool forestIsReady;
 
     void Awake()

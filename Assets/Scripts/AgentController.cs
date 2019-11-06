@@ -7,9 +7,13 @@ public class AgentController : MonoBehaviour
 {
     public GameObject home;
     private EconomyManager econManager;
+    //TODO make EconomyManager spawn both forest and agent and keep track of
+    //relationship
+    private ForestManager forest;
 
     private GameObject target = null;
-    private int mode; //0 for wood, 1 for fruit
+    //private int mode; //0 for wood, 1 for fruit
+    private GoalType mode = GoalType.Wood;
     private GameObject heldObject = null;
 
     public float walkSpeed = 15.0f;
@@ -19,9 +23,6 @@ public class AgentController : MonoBehaviour
     public int numTreesHarvested = 0;
     public int numMangoesHarvested = 0;
 
-    //temporary fixed array of time ratios
-    //private const int numRatios = 11;
-    //private float[] ratios = new float[numRatios];
     //half hour increments if the work day is eight hours
     private const float timeAllocationRatioIncrement = 0.0625f;
     private float defaultAlloc = 5 * timeAllocationRatioIncrement;
@@ -42,12 +43,7 @@ public class AgentController : MonoBehaviour
       //though it doesn't seem preferable to have to assign it in the UI.
       //GameObject econManagerObject = GameObject.Find("EconomyManager");
       econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
-
-      //temporary fixed array of time ratios
-      //for (int i = 0; i < numRatios; i++)
-      //{
-      //  ratios[i] = (float)i / (float)(numRatios - 1);
-      //}
+      forest = GameObject.Find("Forest").GetComponent<ForestManager>();
     }
 
     // Update is called once per frame
@@ -149,28 +145,20 @@ public class AgentController : MonoBehaviour
       //Check time allocation
       if (Time.time - startTime < woodCollectionTimeRatio * collectionTime)
       {
-        mode = 0; //Collect wood
+        mode = GoalType.Wood; //Collect wood
       }
       else
       {
-        mode = 1; //Collect fruit
+        mode = GoalType.Fruit; //Collect fruit
       }
 
       //Pick target
       if (target == null)
       {
-        switch(mode)
-        {
-          case 0:
-            target = FindClosestHarvestableWithTag("wood");
-            numTreesHarvested++;
-            break;
-          case 1:
-            target = FindClosestHarvestableWithTag("fruit");
-            numMangoesHarvested++;
-            break;
-        }
-        //TODO: Handle the case where no more potential targets remain
+        target = FindClosestTarget(mode);
+      }
+      else {
+          Debug.LogWarning("GoHarvest was called when agent already had target.");
       }
 
       while (GoToTargetIfNotThere(harvestDistance))
@@ -294,27 +282,64 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    public GameObject FindClosestHarvestableWithTag(string tag)
+    private GameObject FindClosestTarget(GoalType mode)
     {
-        GameObject[] goods;
-        goods = GameObject.FindGameObjectsWithTag(tag);
+      //This whole method is messy in part because TreeController inherits from
+      //HarvestableController, and I'm unsure how to declare a list that can
+      //handle either type, so I'm using GameObject as a common denominator.
+      //Ideally it would just consider TreeControllers to be HarvestableControllers
+      //letting me treat everything as a HarvestableController in cases such as
+      //this, where the specifics don't matter, which was the whole point of
+      //setting up inheritance in the first place. ¯\_(ツ)_/¯
 
-        GameObject closest = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject go in goods)
-        {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance)
+      //But hey, it doesn't FindGameObject anywhere!
+
+      List<GameObject> listToSearch = new List<GameObject>();
+
+      switch(mode)
+      {
+        case GoalType.Wood:
+          var tlist = forest.allTrees;
+          foreach (TreeController tc in tlist)
+          {
+            listToSearch.Add(tc.gameObject);
+          }
+          //TODO: Increment num harvested after harvest
+          numTreesHarvested++;
+          break;
+        case GoalType.Fruit:
+          var flist = forest.allFruit;
+          foreach (HarvestableController hc in flist)
+          {
+            listToSearch.Add(hc.gameObject);
+          }
+          numMangoesHarvested++;
+          break;
+        default:
+          Debug.LogWarning("Unknown GoalType");
+          break;
+      }
+
+      GameObject closest = null;
+      float distance = Mathf.Infinity;
+      Vector3 position = transform.position;
+      foreach (var go in listToSearch)
+      {
+          //go = hc.gameObject;
+          Vector3 diff = go.transform.position - position;
+          float curDistance = diff.sqrMagnitude;
+          if (curDistance < distance)
+          {
+            if (go.GetComponent<HarvestableController>().harvested == false)
             {
-                if (go.GetComponent<HarvestableController>().harvested == false)
-                {
-                  closest = go;
-                  distance = curDistance;
-                }
+              closest = go;
+              distance = curDistance;
             }
-        }
-        return closest;
+          }
+      }
+
+      return closest;
+
+      //TODO: Handle the case where no more potential targets remain
     }
 }

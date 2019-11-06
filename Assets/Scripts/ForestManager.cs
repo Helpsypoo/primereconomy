@@ -9,7 +9,25 @@ public class ForestManager : MonoBehaviour
     public float radius = 15f;
     public GameObject wood;
 
-    public TreeController[] trees = new TreeController[numTrees];
+
+    //public Dictionary<GoalType, List<HarvestableController>> allHarvestables;
+    //I'd love to just put these in a dictionary, since it seems like there
+    //should be a way to do this when the types have common inheritance.
+    //Not sure how, though.
+
+    public List<TreeController> allTrees;
+    public List<HarvestableController> allFruit {
+      get {
+        var fruit = new List<HarvestableController>();
+        foreach (var t in allTrees) {
+          foreach (var f in t.fruits)
+            if (f != null) {
+              fruit.Add(f);
+            }
+          }
+        return fruit;
+      }
+    }
 
     // Awake is called before Start
     void Awake()
@@ -27,15 +45,14 @@ public class ForestManager : MonoBehaviour
     {
       for (int i = 0; i < numTrees; i++)
       {
-        AddTree(i);
+        AddTree();
       }
     }
 
     public void ReplenishForest()
     {
-      foreach (TreeController tc in trees) //(int i = 0; i < numTrees; i++)
+      foreach (TreeController tc in allTrees) //(int i = 0; i < numTrees; i++)
       {
-        //TreeController tc = trees[i];
         //Regrow harvested trees and mangoes, handle mangoes on ground
         if (tc.harvested == true)
         {
@@ -70,7 +87,7 @@ public class ForestManager : MonoBehaviour
       }
     }
 
-    void AddTree(int treeIndex)
+    void AddTree()
     {
       //Create tree
       GameObject newTree = Instantiate(tree, gameObject.transform);
@@ -84,7 +101,7 @@ public class ForestManager : MonoBehaviour
 
       //Manage TreeController
       TreeController tc = newTree.GetComponent<TreeController>();
-      trees[treeIndex] = tc;
+      allTrees.Add(tc);
       tc.forest = this;
       tc.GrowMangoes();
     }

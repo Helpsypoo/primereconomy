@@ -362,27 +362,7 @@ MonoBehaviour:
   tree: {fileID: 839801207772564717, guid: 79dbca11bc3023e488b003d84bdbe899, type: 3}
   radius: 15
   wood: {fileID: 1831481640832122599, guid: bf47349d3611ec345b677eb86e29f25d, type: 3}
-  trees:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  allTrees: []
 --- !u!4 &1610727555
 Transform:
   m_ObjectHideFlags: 0
