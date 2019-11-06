@@ -6,7 +6,7 @@ using UnityEngine;
 public class AgentController : MonoBehaviour
 {
     public GameObject home;
-    private EconomyManager econManager;
+    //private EconomyManager econManager;
     //TODO make EconomyManager spawn both forest and agent and keep track of
     //relationship
     private ForestManager forest;
@@ -42,7 +42,7 @@ public class AgentController : MonoBehaviour
       //I'm certain there's a preferred way to do this,
       //though it doesn't seem preferable to have to assign it in the UI.
       //GameObject econManagerObject = GameObject.Find("EconomyManager");
-      econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
+      //econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
       forest = GameObject.Find("Forest").GetComponent<ForestManager>();
     }
 
@@ -244,7 +244,7 @@ public class AgentController : MonoBehaviour
       numMangoesHarvested = 0;
 
       //Tell manager we're done
-      econManager.AgentIsDone(gameObject);
+      EconomyManager.instance.AgentIsDone(gameObject);
     }
 
     private bool GoToTargetIfNotThere(float goalDistance = 0)

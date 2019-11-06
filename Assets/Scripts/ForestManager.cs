@@ -9,7 +9,6 @@ public class ForestManager : MonoBehaviour
     public float radius = 15f;
     public GameObject wood;
 
-
     //public Dictionary<GoalType, List<HarvestableController>> allHarvestables;
     //I'd love to just put these in a dictionary, since it seems like there
     //should be a way to do this when the types have common inheritance.
@@ -32,7 +31,7 @@ public class ForestManager : MonoBehaviour
     // Awake is called before Start
     void Awake()
     {
-
+      
     }
 
     // Update is called once per frame

@@ -16,13 +16,23 @@ public class EconomyManager : MonoBehaviour
     //TODO: Make EconomyManager spawn forests and instantiate controllers
     //For now, just dragging a forest GameObject from scene.
     public GameObject forest;
+
     public int date;
     private bool forestIsReady;
+    public static EconomyManager instance;
+
+    public ForestManager forestManager;
 
     void Awake()
     {
-      ac = agent.GetComponent<AgentController>();
+      if (instance == null) {
+        instance = this;
+      }
+      else {
+        Destroy(this.gameObject);
+      }
 
+      ac = agent.GetComponent<AgentController>();
       forest.GetComponent<ForestManager>().PrepForest();
       forestIsReady = true;
     }
