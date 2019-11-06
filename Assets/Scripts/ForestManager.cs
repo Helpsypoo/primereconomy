@@ -9,7 +9,7 @@ public class ForestManager : MonoBehaviour
     public float radius = 15f;
     public GameObject wood;
 
-    public GameObject[] trees = new GameObject[numTrees];
+    public TreeController[] trees = new TreeController[numTrees];
 
     // Awake is called before Start
     void Awake()
@@ -33,9 +33,9 @@ public class ForestManager : MonoBehaviour
 
     public void ReplenishForest()
     {
-      for (int i = 0; i < numTrees; i++)
+      foreach (TreeController tc in trees) //(int i = 0; i < numTrees; i++)
       {
-        TreeController tc = trees[i].GetComponent<TreeController>();
+        //TreeController tc = trees[i];
         //Regrow harvested trees and mangoes, handle mangoes on ground
         if (tc.harvested == true)
         {
@@ -45,7 +45,7 @@ public class ForestManager : MonoBehaviour
           for (int j = 0; j < tc.fruits.Length; j++)
           {
             if (tc.fruits[j] != null &&
-                tc.fruits[j].GetComponent<HarvestableController>().harvested == false)
+                tc.fruits[j].harvested == false)
               {
                 Destroy(tc.fruits[j]);
               }
@@ -59,7 +59,7 @@ public class ForestManager : MonoBehaviour
           for (int j = 0; j < tc.fruits.Length; j++)
           {
             if (tc.fruits[j] != null &&
-                tc.fruits[j].GetComponent<HarvestableController>().harvested == true)
+                tc.fruits[j].harvested == true)
               {
                 tc.fruits[j] = null;
               }
@@ -74,16 +74,18 @@ public class ForestManager : MonoBehaviour
     {
       //Create tree
       GameObject newTree = Instantiate(tree, gameObject.transform);
-      trees[treeIndex] = newTree;
 
-      //Translate and rotate tree
+      //Translate and rotate tree GameObject
       Transform treeTransform = newTree.transform;
       Vector3 pos = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
       treeTransform.Translate(pos);
       int numTurns = Random.Range(0, 4);
       treeTransform.Rotate(0, 90 * numTurns, 0, Space.Self);
 
+      //Manage TreeController
       TreeController tc = newTree.GetComponent<TreeController>();
+      trees[treeIndex] = tc;
+      tc.forest = this;
       tc.GrowMangoes();
     }
 }

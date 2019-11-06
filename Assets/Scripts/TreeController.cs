@@ -6,12 +6,14 @@ public class TreeController : HarvestableController
 {
     private float logSpawnHeight = 1.0f;
     private const int fruitCapacity = 4;  //Trees have room for four fruits
-    public GameObject[] fruits = new GameObject[fruitCapacity];
+    public HarvestableController[] fruits = new HarvestableController[fruitCapacity];
 
     public GameObject mango;
     public static int mangoYield = 1;
     public float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
+
+    public ForestManager forest;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +49,11 @@ public class TreeController : HarvestableController
       //TODO put rotation and translation in Instantiate call
 
       int positionIndex = GetOpenFruitIndex();
-      fruits[positionIndex] = newMango;
+
+      //I've been told to avoid GetComponent when I can, but given that this
+      //mango was just instantiated as a new game object, this seems like a
+      //reasonable place.
+      fruits[positionIndex] = newMango.GetComponent<HarvestableController>();
 
       Vector3 mangoPos = new Vector3(mangoDistance, mangoHeight, 0);
       for (int i = 0; i < positionIndex; i++)
@@ -72,6 +78,7 @@ public class TreeController : HarvestableController
       return openSpaces[openSpaceIndex];
     }
 
+    //Could maybe turn this into a property with a custom get. Idk, breh.
     int GetNumMangoes()
     {
       //Almost certainly a better way to do this
@@ -90,7 +97,9 @@ public class TreeController : HarvestableController
     {
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
                                                         gameObject.transform.position.z);
-      GameObject logPrefab = gameObject.GetComponentInParent<ForestManager>().wood;
+
+      //GameObject logPrefab = gameObject.GetComponentInParent<ForestManager>().wood;
+      GameObject logPrefab = forest.wood;
       GameObject log = Instantiate(logPrefab, logSpawnPos, logPrefab.transform.rotation);
 
       //TODO make this work for more than or less than one fruit
