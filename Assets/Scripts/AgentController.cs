@@ -6,10 +6,7 @@ using UnityEngine;
 public class AgentController : MonoBehaviour
 {
     public GameObject home;
-    //private EconomyManager econManager;
-    //TODO make EconomyManager spawn both forest and agent and keep track of
-    //relationship
-    private ForestManager forest;
+    public ForestManager forest;
 
     private GameObject target = null;
     //private int mode; //0 for wood, 1 for fruit
@@ -43,7 +40,7 @@ public class AgentController : MonoBehaviour
 
     void Start()
     {
-      forest = EconomyManager.instance.forestManager;
+
     }
 
     // Update is called once per frame

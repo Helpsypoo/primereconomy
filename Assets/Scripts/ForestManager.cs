@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ForestManager : MonoBehaviour
 {
-    public GameObject tree;
+    //public GameObject tree;
     private static int numTrees = 20;
     private float radius = 15f;
     public GameObject wood;
@@ -14,7 +14,7 @@ public class ForestManager : MonoBehaviour
     //should be a way to do this when the types have common inheritance.
     //Not sure how, though.
 
-    public List<TreeController> allTrees;
+    public List<TreeController> allTrees = new List<TreeController>();
     public List<HarvestableController> allFruit {
       get {
         var fruit = new List<HarvestableController>();
@@ -89,7 +89,7 @@ public class ForestManager : MonoBehaviour
     void AddTree()
     {
       //Create tree
-      GameObject newTree = Instantiate(tree, gameObject.transform);
+      GameObject newTree = Instantiate(EconomyManager.instance.treePrefab, gameObject.transform);
 
       //Translate and rotate tree GameObject
       Transform treeTransform = newTree.transform;
@@ -101,7 +101,6 @@ public class ForestManager : MonoBehaviour
       //Manage TreeController
       TreeController tc = newTree.GetComponent<TreeController>();
       allTrees.Add(tc);
-      tc.forest = this;
       tc.GrowMangoes();
     }
 }

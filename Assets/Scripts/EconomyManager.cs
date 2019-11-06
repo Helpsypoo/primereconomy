@@ -11,17 +11,21 @@ public enum GoalType
 
 public class EconomyManager : MonoBehaviour
 {
-    public GameObject agent;
-    private AgentController ac;
-    //TODO: Make EconomyManager spawn forests and instantiate controllers
-    //For now, just dragging a forest GameObject from scene.
+    public static EconomyManager instance;
+    public GameObject treePrefab;
+    public GameObject logPrefab;
+    public GameObject mangoPrefab;
+    public GameObject agentPrefab;
+
 
     public int date;
-    private bool forestIsReady;
-    public static EconomyManager instance;
 
-    public GameObject forest;
-    public ForestManager forestManager;
+    private bool forestIsReady;
+    private ForestManager forest;
+    private Vector3 forestPosition = new Vector3(10, 0, 0);
+
+    private AgentController ac;
+    private Vector3 homePosition = new Vector3(-10, 0, 0);
 
     void Awake()
     {
@@ -32,10 +36,23 @@ public class EconomyManager : MonoBehaviour
         Destroy(this.gameObject);
       }
 
-      ac = agent.GetComponent<AgentController>();
-      forestManager = forest.GetComponent<ForestManager>();
-      forestManager.PrepForest();
+      //TODO: Hand prefabs down to forests, really only when there are other kinds
+      //of forest.
+      //Spawn forest
+      GameObject forestGO = new GameObject("Forest");
+      forestGO.transform.position = forestPosition;
+      forest = forestGO.AddComponent<ForestManager>();
+      forest.PrepForest();
       forestIsReady = true;
+
+      //Spawn agent
+      GameObject agent = Instantiate(agentPrefab);
+      ac = agent.AddComponent<AgentController>();
+      ac.forest = forest;
+
+      GameObject home = new GameObject("Home");
+      home.transform.position = homePosition;
+      ac.home = home;
     }
 
     void Start()
@@ -76,7 +93,7 @@ public class EconomyManager : MonoBehaviour
 
 
       //ReplenishForest
-      forest.GetComponent<ForestManager>().ReplenishForest();
+      forest.ReplenishForest();
       forestIsReady = true;
     }
 }

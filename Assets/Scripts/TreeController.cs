@@ -11,13 +11,12 @@ public class TreeController : HarvestableController
     //this fruit is on. I do like having the fixed-length array fruits, though.
     public HarvestableController[] fruits = new HarvestableController[fruitCapacity];
 
-    public GameObject mango;
-    [SerializeField] private int mangoYield = 1;
+    private int mangoYield = 1;
     private float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
 
     //TODO: Set this in a constructor or something so it can be private
-    public ForestManager forest;
+    //public ForestManager forest;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +47,7 @@ public class TreeController : HarvestableController
 
     void AddMango()
     {
-      GameObject newMango = Instantiate(mango, gameObject.transform);
+      GameObject newMango = Instantiate(EconomyManager.instance.mangoPrefab, gameObject.transform);
       //TODO rotate mango
       //TODO put rotation and translation in Instantiate call
 
@@ -102,7 +101,7 @@ public class TreeController : HarvestableController
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
                                                         gameObject.transform.position.z);
 
-      GameObject logPrefab = forest.wood;
+      GameObject logPrefab = EconomyManager.instance.logPrefab;
       GameObject log = Instantiate(logPrefab, logSpawnPos, logPrefab.transform.rotation);
 
       //TODO make this work for more than or less than one fruit
