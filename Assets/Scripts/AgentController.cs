@@ -16,34 +16,34 @@ public class AgentController : MonoBehaviour
     private GoalType mode = GoalType.Wood;
     private GameObject heldObject = null;
 
-    public float walkSpeed = 15.0f;
-    public float turnSpeed = 15.0f;
-    public float harvestDistance = 3.0f;
-    public float deliverDistance = 0.1f;
-    public int numTreesHarvested = 0;
-    public int numMangoesHarvested = 0;
+    private float walkSpeed = 15.0f;
+    private float turnSpeed = 15.0f;
+    private float harvestDistance = 3.0f;
+    private float deliverDistance = 0.1f;
+    private int numTreesHarvested = 0;
+    private int numMangoesHarvested = 0;
 
     //half hour increments if the work day is eight hours
     private const float timeAllocationRatioIncrement = 0.0625f;
     private float defaultAlloc = 5 * timeAllocationRatioIncrement;
-    public float woodCollectionTimeRatio;
+    private float woodCollectionTimeRatio;
 
-
-    public float collectionTime = 20.0f; //seconds
+    private float collectionTime = 20.0f; //seconds
     //public float accelerationFactor = 1.0f; //For speeding up sims later on.
     private float startTime;
-    public bool dayOver = true;
+    private bool dayOver = true;
 
     //Memory of day outcomes
     public List<AgentDay> activityLog = new List<AgentDay>();
 
     void Awake()
     {
-      //I'm certain there's a preferred way to do this,
-      //though it doesn't seem preferable to have to assign it in the UI.
-      //GameObject econManagerObject = GameObject.Find("EconomyManager");
-      //econManager = GameObject.Find("EconomyManager").GetComponent<EconomyManager>();
-      forest = GameObject.Find("Forest").GetComponent<ForestManager>();
+
+    }
+
+    void Start()
+    {
+      forest = EconomyManager.instance.forestManager;
     }
 
     // Update is called once per frame
@@ -70,7 +70,6 @@ public class AgentController : MonoBehaviour
 
       //TODO: Maybe refactor this
       float bestUtility = 0f;
-      //float bestAlloc = -1.0f; //just something out of normal range to be replace
       AgentDay bestDay = null;
       float lowestAlloc = 1.0f; //To be replaced
       float highestAlloc = 0.0f; //To be replaced
@@ -145,11 +144,11 @@ public class AgentController : MonoBehaviour
       //Check time allocation
       if (Time.time - startTime < woodCollectionTimeRatio * collectionTime)
       {
-        mode = GoalType.Wood; //Collect wood
+        mode = GoalType.Wood;
       }
       else
       {
-        mode = GoalType.Fruit; //Collect fruit
+        mode = GoalType.Fruit;
       }
 
       //Pick target
@@ -183,7 +182,7 @@ public class AgentController : MonoBehaviour
       if (heldObject == null) {
         Debug.LogWarning("Agent is trying to deliver null in GoDeliver()");
       }
-      //Destroy(heldObject);
+      //Destroy(heldObject); //If you don't like clutter
       heldObject.transform.parent = null;
       heldObject = null;
       target = null;
@@ -247,7 +246,7 @@ public class AgentController : MonoBehaviour
       EconomyManager.instance.AgentIsDone(gameObject);
     }
 
-    private bool GoToTargetIfNotThere(float goalDistance = 0)
+    bool GoToTargetIfNotThere(float goalDistance = 0)
     {
       //This seems like it might break some best practices
       Vector3 heading = target.transform.position - transform.position;
@@ -282,7 +281,7 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    private GameObject FindClosestTarget(GoalType mode)
+    GameObject FindClosestTarget(GoalType mode)
     {
       //This whole method is messy in part because TreeController inherits from
       //HarvestableController, and I'm unsure how to declare a list that can

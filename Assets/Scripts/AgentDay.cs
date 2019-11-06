@@ -11,9 +11,9 @@ public class AgentDay
     public int numMangoesHarvested;
     public float utility;
 
-    public AgentDay(int newDate, float ratio)
+    public AgentDay(int date, float timeAllocationRatio)
     {
-      date = newDate;
-      timeAllocationRatio = ratio;
+      this.date = date;
+      this.timeAllocationRatio = timeAllocationRatio;
     }
 }

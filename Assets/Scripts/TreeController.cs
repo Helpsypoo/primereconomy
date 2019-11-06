@@ -7,15 +7,16 @@ public class TreeController : HarvestableController
     private float logSpawnHeight = 1.0f;
     private const int fruitCapacity = 4;  //Trees have room for four fruits
 
-    //This works kind of strangley, with indeces also determining which branch
+    //This works kind of strangely, with indices also determining which branch
     //this fruit is on. I do like having the fixed-length array fruits, though.
     public HarvestableController[] fruits = new HarvestableController[fruitCapacity];
 
     public GameObject mango;
-    public static int mangoYield = 1;
-    public float mangoDistance = 1.3f;
+    [SerializeField] private int mangoYield = 1;
+    private float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
 
+    //TODO: Set this in a constructor or something so it can be private
     public ForestManager forest;
 
     // Start is called before the first frame update
@@ -101,7 +102,6 @@ public class TreeController : HarvestableController
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
                                                         gameObject.transform.position.z);
 
-      //GameObject logPrefab = gameObject.GetComponentInParent<ForestManager>().wood;
       GameObject logPrefab = forest.wood;
       GameObject log = Instantiate(logPrefab, logSpawnPos, logPrefab.transform.rotation);
 

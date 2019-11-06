@@ -5,8 +5,8 @@ using UnityEngine;
 public class ForestManager : MonoBehaviour
 {
     public GameObject tree;
-    public static int numTrees = 20;
-    public float radius = 15f;
+    private static int numTrees = 20;
+    private float radius = 15f;
     public GameObject wood;
 
     //public Dictionary<GoalType, List<HarvestableController>> allHarvestables;
@@ -31,7 +31,7 @@ public class ForestManager : MonoBehaviour
     // Awake is called before Start
     void Awake()
     {
-      
+
     }
 
     // Update is called once per frame
