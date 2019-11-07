@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TreeController : HarvestableController
@@ -14,9 +15,6 @@ public class TreeController : HarvestableController
     private int mangoYield = 1;
     private float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
-
-    //TODO: Set this in a constructor or something so it can be private
-    //public ForestManager forest;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +36,7 @@ public class TreeController : HarvestableController
 
     public void GrowMangoes()
     {
-      int numMangoes = GetNumMangoes();
+      int numMangoes = fruits.Count(x => x != null);
       for (int i = 0; i < mangoYield - numMangoes; i++)
       {
         AddMango();
@@ -81,21 +79,6 @@ public class TreeController : HarvestableController
       return openSpaces[openSpaceIndex];
     }
 
-    //Could maybe turn this into a property with a custom get. Idk, breh.
-    int GetNumMangoes()
-    {
-      //Almost certainly a better way to do this
-      int numMangoes = 0;
-      for (int i = 0; i < fruitCapacity; i++)
-      {
-        if (fruits[i] != null)
-        {
-          numMangoes++;
-        }
-      }
-      return numMangoes;
-    }
-
     public override GameObject HandleHarvest()
     {
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
@@ -114,7 +97,6 @@ public class TreeController : HarvestableController
           fruitRb.useGravity = true;
         }
       }
-
 
       harvested = true;
       gameObject.SetActive(false);
