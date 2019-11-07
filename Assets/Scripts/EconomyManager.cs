@@ -79,11 +79,12 @@ public class EconomyManager : MonoBehaviour
       //Increment date
       date++;
 
+      //Print summary to Unity console
       AgentDay lastLog = ac.activityLog.Last();
       int lastDate = lastLog.date; //Should be same as date
       float lastRatio = lastLog.timeAllocationRatio;
-      int trees = lastLog.numTreesHarvested;
-      int mangoes = lastLog.numMangoesHarvested;
+      int trees = lastLog.numsHarvested[GoalType.Wood];
+      int mangoes = lastLog.numsHarvested[GoalType.Fruit];
       Debug.Log(
         "On day " + lastDate.ToString() + ", agent harvested " +
         trees.ToString() + " trees and " + mangoes.ToString() +

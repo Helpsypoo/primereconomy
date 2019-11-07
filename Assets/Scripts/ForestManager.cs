@@ -4,27 +4,31 @@ using UnityEngine;
 
 public class ForestManager : MonoBehaviour
 {
-    //public GameObject tree;
     private static int numTrees = 20;
     private float radius = 15f;
     public GameObject wood;
 
-    //public Dictionary<GoalType, List<HarvestableController>> allHarvestables;
-    //I'd love to just put these in a dictionary, since it seems like there
-    //should be a way to do this when the types have common inheritance.
-    //Not sure how, though.
-
-    public List<TreeController> allTrees = new List<TreeController>();
+    public List<HarvestableController> allTrees = new List<HarvestableController>();
     public List<HarvestableController> allFruit {
       get {
         var fruit = new List<HarvestableController>();
-        foreach (var t in allTrees) {
+        foreach (TreeController t in allTrees) {
           foreach (var f in t.fruits)
             if (f != null) {
               fruit.Add(f);
             }
           }
         return fruit;
+      }
+    }
+
+    public Dictionary<GoalType, List<HarvestableController>> allHarvestables {
+      //Dict needs getter to trigger getter/update of allFruit
+      get {
+        var all = new Dictionary<GoalType, List<HarvestableController>>();
+        all.Add(GoalType.Wood, allTrees);
+        all.Add(GoalType.Fruit, allFruit);
+        return all;
       }
     }
 
@@ -50,7 +54,7 @@ public class ForestManager : MonoBehaviour
 
     public void ReplenishForest()
     {
-      foreach (TreeController tc in allTrees) //(int i = 0; i < numTrees; i++)
+      foreach (TreeController tc in allTrees)
       {
         //Regrow harvested trees and mangoes, handle mangoes on ground
         if (tc.harvested == true)
@@ -82,7 +86,6 @@ public class ForestManager : MonoBehaviour
           }
         }
         tc.GrowMangoes();
-
       }
     }
 

@@ -9,7 +9,6 @@ public class AgentController : MonoBehaviour
     public ForestManager forest;
 
     private GameObject target = null;
-    //private int mode; //0 for wood, 1 for fruit
     private GoalType mode = GoalType.Wood;
     private GameObject heldObject = null;
 
@@ -17,8 +16,9 @@ public class AgentController : MonoBehaviour
     private float turnSpeed = 15.0f;
     private float harvestDistance = 3.0f;
     private float deliverDistance = 0.1f;
-    private int numTreesHarvested = 0;
-    private int numMangoesHarvested = 0;
+
+    private Dictionary<GoalType, int> numsHarvested =
+              new Dictionary<GoalType, int>();
 
     //half hour increments if the work day is eight hours
     private const float timeAllocationRatioIncrement = 0.0625f;
@@ -52,8 +52,10 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    float Utility(int fruit, int wood)
+    float Utility(Dictionary<GoalType, int> nums)
     {
+      int wood = nums[GoalType.Wood];
+      int fruit = nums[GoalType.Fruit];
       return Mathf.Log(fruit + 1, 2) + Mathf.Log(wood + 1, 2);
     }
 
@@ -131,8 +133,15 @@ public class AgentController : MonoBehaviour
       DetermineTimeAllocation();
       activityLog.Add(new AgentDay(date, woodCollectionTimeRatio));
 
-      startTime = Time.time;
+      //Reset state
+      target = null;
       dayOver = false;
+      startTime = Time.time;
+      foreach (GoalType type in (GoalType[]) System.Enum.GetValues(typeof(GoalType)))
+      {
+        numsHarvested[type] = 0;
+      }
+
       StartCoroutine("GoHarvest");
     }
 
@@ -165,6 +174,8 @@ public class AgentController : MonoBehaviour
       heldObject = target.GetComponent<HarvestableController>().HandleHarvest();
       heldObject.transform.parent = transform;
       //TODO: Animate movement of heldObject
+
+      numsHarvested[mode]++;
 
       StartCoroutine("GoDeliver");
     }
@@ -207,9 +218,8 @@ public class AgentController : MonoBehaviour
 
       //Log day's outcome
       AgentDay day = activityLog.Last();
-      day.numTreesHarvested = numTreesHarvested;
-      day.numMangoesHarvested = numMangoesHarvested;
-      day.utility = Utility(numMangoesHarvested, numTreesHarvested);
+      day.numsHarvested = numsHarvested;
+      day.utility = Utility(numsHarvested);
 
       //Testing
       //Agent behavior assumes deterministic harvesting. Check that the new day
@@ -221,10 +231,10 @@ public class AgentController : MonoBehaviour
             day.utility != otherDay.utility)
         {
           string warning = "Day " + day.date.ToString() + " yielded " +
-            day.numTreesHarvested.ToString() + " trees and " + day.numMangoesHarvested.ToString() +
+            day.numsHarvested[GoalType.Wood].ToString() + " trees and " + day.numsHarvested[GoalType.Fruit].ToString() +
             " mangoes with a ratio of " + day.timeAllocationRatio.ToString() +
             ".@ Day " + otherDay.date.ToString() + " yielded " +
-            otherDay.numTreesHarvested.ToString() + " trees and " + otherDay.numMangoesHarvested.ToString() +
+            otherDay.numsHarvested[GoalType.Wood].ToString() + " trees and " + otherDay.numsHarvested[GoalType.Fruit].ToString() +
             " mangoes with a ratio of " + otherDay.timeAllocationRatio.ToString() +
             ".";
           warning = warning.Replace("@", System.Environment.NewLine);
@@ -232,12 +242,6 @@ public class AgentController : MonoBehaviour
           Debug.LogWarning(warning);
         }
       }
-
-      //Reset state
-      target = null;
-      mode = 0;
-      numTreesHarvested = 0;
-      numMangoesHarvested = 0;
 
       //Tell manager we're done
       EconomyManager.instance.AgentIsDone(gameObject);
@@ -280,61 +284,26 @@ public class AgentController : MonoBehaviour
 
     GameObject FindClosestTarget(GoalType mode)
     {
-      //This whole method is messy in part because TreeController inherits from
-      //HarvestableController, and I'm unsure how to declare a list that can
-      //handle either type, so I'm using GameObject as a common denominator.
-      //Ideally it would just consider TreeControllers to be HarvestableControllers
-      //letting me treat everything as a HarvestableController in cases such as
-      //this, where the specifics don't matter, which was the whole point of
-      //setting up inheritance in the first place. ¯\_(ツ)_/¯
+      List<HarvestableController> listToSearch = forest.allHarvestables[mode];
 
-      //But hey, it doesn't FindGameObject anywhere!
-
-      List<GameObject> listToSearch = new List<GameObject>();
-
-      switch(mode)
-      {
-        case GoalType.Wood:
-          var tlist = forest.allTrees;
-          foreach (TreeController tc in tlist)
-          {
-            listToSearch.Add(tc.gameObject);
-          }
-          //TODO: Increment num harvested after harvest
-          numTreesHarvested++;
-          break;
-        case GoalType.Fruit:
-          var flist = forest.allFruit;
-          foreach (HarvestableController hc in flist)
-          {
-            listToSearch.Add(hc.gameObject);
-          }
-          numMangoesHarvested++;
-          break;
-        default:
-          Debug.LogWarning("Unknown GoalType");
-          break;
-      }
-
-      GameObject closest = null;
+      HarvestableController closest = null;
       float distance = Mathf.Infinity;
       Vector3 position = transform.position;
-      foreach (var go in listToSearch)
+      foreach (HarvestableController harvestable in listToSearch)
       {
-          //go = hc.gameObject;
-          Vector3 diff = go.transform.position - position;
+          Vector3 diff = harvestable.transform.position - position;
           float curDistance = diff.sqrMagnitude;
           if (curDistance < distance)
           {
-            if (go.GetComponent<HarvestableController>().harvested == false)
+            if (harvestable.harvested == false)
             {
-              closest = go;
+              closest = harvestable;
               distance = curDistance;
             }
           }
       }
 
-      return closest;
+      return closest.gameObject;
 
       //TODO: Handle the case where no more potential targets remain
     }
