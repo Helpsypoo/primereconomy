@@ -111,4 +111,17 @@ Icon
 .AppleDesktop
 Network Trash Folder
 Temporary Items
-.apdisk
+.apdiskAssets/Blend files.meta
+Assets/Blend files/
+Assets/Blob Animation Controller.controller
+Assets/Blob Animation Controller.controller.meta
+Assets/Prefabs/blob.prefab
+Assets/Prefabs/blob.prefab.meta
+Assets/Raymarching Toolkit.meta
+Assets/Raymarching Toolkit/
+Assets/Scenes/Shaders.meta
+Assets/Scenes/Shaders/
+Assets/Scripts/BlobController.cs
+Assets/Scripts/BlobController.cs.meta
+Assets/Blend/blob.blend
+Assets/Blend/blob.blend.meta
