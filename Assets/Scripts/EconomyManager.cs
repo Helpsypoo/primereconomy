@@ -46,7 +46,15 @@ public class EconomyManager : MonoBehaviour
       forestIsReady = true;
 
       //Spawn agent
-      GameObject agent = Instantiate(agentPrefab);
+      //Raymarching toolkit doesn't support spawning of raymarching objects
+      //so to have a raymarched agent, need to put it in the scene beforehand.
+      //If it doesn't exist, fall back to prefab.
+      //(Blob asset not public)
+      GameObject agent = GameObject.FindGameObjectWithTag("agent");
+      if (agent == null)
+      {
+        agent = Instantiate(agentPrefab);
+      }
       ac = agent.AddComponent<AgentController>();
       ac.forest = forest;
 
