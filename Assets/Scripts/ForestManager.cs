@@ -50,6 +50,39 @@ public class ForestManager : MonoBehaviour
       {
         AddTree();
       }
+
+      //Temporary for finding a fixed set of coords
+      //In place of actual recordings and recreations
+
+      var coords = new System.Text.StringBuilder();
+      coords.AppendLine("Tree coords");
+
+      var treeRots = new System.Text.StringBuilder();
+      treeRots.AppendLine("Tree rots");
+
+      var fruitCoords = new System.Text.StringBuilder();
+      fruitCoords.AppendLine("Fruit coords");
+
+      var fruitRots = new System.Text.StringBuilder();
+      fruitRots.AppendLine("Fruit rots");
+
+      foreach (TreeController tree in allTrees) {
+        coords.AppendLine(tree.transform.localPosition.ToString());
+        treeRots.AppendLine(tree.transform.localRotation.ToString());
+
+        foreach (HarvestableController fruit in tree.fruits) {
+          if (fruit != null) {
+            fruitCoords.AppendLine(fruit.transform.localPosition.ToString());
+            fruitRots.AppendLine(fruit.transform.localRotation.ToString());
+          }
+        }
+
+      }
+
+      Debug.Log(coords);
+      Debug.Log(treeRots);
+      Debug.Log(fruitCoords);
+      Debug.Log(fruitRots);
     }
 
     public void ReplenishForest()

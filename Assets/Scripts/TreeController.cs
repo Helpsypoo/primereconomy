@@ -46,7 +46,6 @@ public class TreeController : HarvestableController
     void AddMango()
     {
       GameObject newMango = Instantiate(EconomyManager.instance.mangoPrefab, gameObject.transform);
-      //TODO rotate mango
       //TODO put rotation and translation in Instantiate call
 
       int positionIndex = GetOpenFruitIndex();
@@ -62,6 +61,15 @@ public class TreeController : HarvestableController
         mangoPos = Quaternion.Euler(0, 90, 0) * mangoPos;
       }
       newMango.transform.Translate(mangoPos);
+
+      //TODO rotate mango
+      Quaternion mangoRot = newMango.transform.rotation;
+      int numRots = Random.Range(0, 4);
+      for (int i = 0; i < numRots; i++)
+      {
+        mangoRot = Quaternion.Euler(0, 90, 0) * mangoRot;
+      }
+      newMango.transform.rotation = mangoRot;
     }
 
     int GetOpenFruitIndex()
