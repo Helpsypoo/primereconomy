@@ -46,35 +46,46 @@ public class TreeController : HarvestableController
     void AddMango()
     {
       GameObject newMango = Instantiate(EconomyManager.instance.mangoPrefab, gameObject.transform);
-      //TODO put rotation and translation in Instantiate call
 
+      //Translate and rotate tree GameObject
       int positionIndex = GetOpenFruitIndex();
+      Transform mangoTransform = newMango.transform;
+      List<HarvestableController> allFruit = EconomyManager.instance.forest.allFruit;
+      if (allFruit.Count < EconomyManager.instance.fruitLocs.Count) {
+        mangoTransform.localPosition = EconomyManager.instance.fruitLocs[allFruit.Count];
+        mangoTransform.localRotation = EconomyManager.instance.fruitRots[allFruit.Count];
+        //TODO: This doesn't properly manage the fruit's index. In the future,
+        //this part should assign the proper index to the fruit, or the somewhat
+        //silly use of index should be abandoned elsewhere.
+      }
+      else {
+        //treeTransform.localPosition = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
+        //int numTurns = Random.Range(0, 4);
+        //treeTransform.localRotation = Quaternion.Euler(0, 90 * numTurns, 0) * treeTransform.localRotation;
+
+        Vector3 mangoPos = new Vector3(mangoDistance, mangoHeight, 0);
+        mangoPos = Quaternion.Euler(0, 90 * positionIndex, 0) * mangoPos;
+        newMango.transform.localPosition = mangoPos;
+
+        Quaternion mangoRot = newMango.transform.rotation;
+        int numRots = Random.Range(0, 4);
+        mangoRot = Quaternion.Euler(0, 90 * numRots, 0) * mangoRot;
+        newMango.transform.localRotation = mangoRot;
+      }
 
       //I've been told to avoid GetComponent when I can, but given that this
       //mango was just instantiated as a new game object, this seems like a
       //reasonable place.
       fruits[positionIndex] = newMango.GetComponent<HarvestableController>();
-
-      Vector3 mangoPos = new Vector3(mangoDistance, mangoHeight, 0);
-      for (int i = 0; i < positionIndex; i++)
-      {
-        mangoPos = Quaternion.Euler(0, 90, 0) * mangoPos;
-      }
-      newMango.transform.Translate(mangoPos);
-
-      //TODO rotate mango
-      Quaternion mangoRot = newMango.transform.rotation;
-      int numRots = Random.Range(0, 4);
-      for (int i = 0; i < numRots; i++)
-      {
-        mangoRot = Quaternion.Euler(0, 90, 0) * mangoRot;
-      }
-      newMango.transform.rotation = mangoRot;
     }
 
     int GetOpenFruitIndex()
     {
       //Almost certainly a more compact way to do this
+      //TODO:
+      //Should really just put the fruit in a list rather than array to decouple
+      //array index and position. Though there needs to be some way of letting
+      //a space be 'taken' if more than one fruit is grown.
       List<int> openSpaces = new List<int>();
       for (int i = 0; i < fruitCapacity; i++)
       {

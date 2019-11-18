@@ -17,11 +17,66 @@ public class EconomyManager : MonoBehaviour
     public GameObject mangoPrefab;
     public GameObject agentPrefab;
 
+    public List<Vector3> treeLocs = new List<Vector3> {
+      new Vector3 (-1.3f, 0.0f, -5.4f),
+      new Vector3 (6.1f, 0.0f, -9.6f),
+      new Vector3 (-8.7f, 0.0f, 8.5f),
+      new Vector3 (-3.1f, 0.0f, -9.9f),
+      new Vector3 (-10.0f, 0.0f, 0.3f),
+      new Vector3 (2.4f, 0.0f, 4.6f),
+      new Vector3 (-4.7f, 0.0f, -4.4f),
+      new Vector3 (1.4f, 0.0f, 5.6f),
+      new Vector3 (-7.7f, 0.0f, 3.0f),
+      new Vector3 (3.3f, 0.0f, -4.6f)
+    };
+
+    public List<Quaternion> treeRots = new List<Quaternion> {
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f)
+    };
+
+    public List<Vector3> fruitLocs = new List<Vector3> {
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, -1.3f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (0.0f, 1.5f, -1.3f),
+      new Vector3 (0.0f, 1.5f, 1.3f)
+    };
+
+    public List<Quaternion> fruitRots = new List<Quaternion> {
+      new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.7f, 0.0f, 0.7f)
+    };
+
+    /*
+    */
+
 
     public int date;
 
     private bool forestIsReady;
-    private ForestManager forest;
+    public ForestManager forest;
     private Vector3 forestPosition = new Vector3(10, 0, 0);
 
     private AgentController ac;

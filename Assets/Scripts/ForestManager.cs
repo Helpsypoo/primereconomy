@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ForestManager : MonoBehaviour
 {
-    private static int numTrees = 20;
-    private float radius = 15f;
+    private static int numTrees = 10;
+    private float radius = 10f;
     public GameObject wood;
 
     public List<HarvestableController> allTrees = new List<HarvestableController>();
@@ -129,10 +129,15 @@ public class ForestManager : MonoBehaviour
 
       //Translate and rotate tree GameObject
       Transform treeTransform = newTree.transform;
-      Vector3 pos = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
-      treeTransform.Translate(pos);
-      int numTurns = Random.Range(0, 4);
-      treeTransform.Rotate(0, 90 * numTurns, 0, Space.Self);
+      if (allTrees.Count < EconomyManager.instance.treeLocs.Count) {
+        treeTransform.localPosition = EconomyManager.instance.treeLocs[allTrees.Count];
+        treeTransform.localRotation = EconomyManager.instance.treeRots[allTrees.Count];
+      }
+      else {
+        treeTransform.localPosition = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
+        int numTurns = Random.Range(0, 4);
+        treeTransform.localRotation = Quaternion.Euler(0, 90 * numTurns, 0) * treeTransform.localRotation;
+      }
 
       //Manage TreeController
       TreeController tc = newTree.GetComponent<TreeController>();
