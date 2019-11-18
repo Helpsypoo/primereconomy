@@ -191,7 +191,7 @@ public class AgentController : MonoBehaviour
         Debug.LogWarning("Agent is trying to deliver null in GoDeliver()");
       }
       //Destroy(heldObject); //If you don't like clutter
-      heldObject.transform.parent = null;
+      heldObject.transform.parent = EconomyManager.instance.transform;
       heldObject = null;
       target = null;
       //TODO: Animate movement of heldObject to container, or something

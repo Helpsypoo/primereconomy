@@ -41,6 +41,7 @@ public class EconomyManager : MonoBehaviour
       //Spawn forest
       GameObject forestGO = new GameObject("Forest");
       forestGO.transform.position = forestPosition;
+      forestGO.transform.parent = transform;
       forest = forestGO.AddComponent<ForestManager>();
       forest.PrepForest();
       forestIsReady = true;
@@ -55,11 +56,13 @@ public class EconomyManager : MonoBehaviour
       {
         agent = Instantiate(agentPrefab);
       }
+      agent.transform.parent = transform;
       ac = agent.AddComponent<AgentController>();
       ac.forest = forest;
 
       GameObject home = new GameObject("Home");
       home.transform.position = homePosition;
+      home.transform.parent = transform;
       ac.home = home;
     }
 

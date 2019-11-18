@@ -92,7 +92,7 @@ public class TreeController : HarvestableController
       {
         if (fruits[i] != null)
         {
-          fruits[i].transform.parent = null;
+          fruits[i].transform.parent = EconomyManager.instance.transform;
           Rigidbody fruitRb = fruits[i].GetComponent<Rigidbody>();
           fruitRb.useGravity = true;
         }
