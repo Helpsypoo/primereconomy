@@ -672,6 +672,21 @@ PrefabInstance:
       propertyPath: hash.lastHash
       value: -723423431
       objectReference: {fileID: 0}
+    - target: {fileID: 941121895585976774, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 941121895585976774, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 941121895585976774, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.83
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d7d41f30b052df43be0c3b1b0a67e73, type: 3}
 --- !u!114 &1109979256 stripped
@@ -774,7 +789,7 @@ MonoBehaviour:
   ExtraAccuracy: 0
   Resolution: 0.7
   _RaymarchDrawDistance: 1000
-  AmbientOcclusion: 1
+  AmbientOcclusion: 0
   AmbientOcclusionAmount: 0.6
   AmbientOcclusionSteps: 10
   performanceTooltips: 1
@@ -930,50 +945,9 @@ MonoBehaviour:
     type: 3}
   agentPrefab: {fileID: 3210892587225362877, guid: 57dd647c323b02e499f0b787a4137d9e,
     type: 3}
-  treeLocs:
-  - {x: -1.3, y: 0, z: -5.4}
-  - {x: 6.1, y: 0, z: -9.6}
-  - {x: -8.7, y: 0, z: 8.5}
-  - {x: -3.1, y: 0, z: -9.9}
-  - {x: -10, y: 0, z: 0.3}
-  - {x: 2.4, y: 0, z: 4.6}
-  - {x: -4.7, y: 0, z: -4.4}
-  - {x: 1.4, y: 0, z: 5.6}
-  - {x: -7.7, y: 0, z: 3}
-  - {x: 3.3, y: 0, z: -4.6}
-  treeRots:
-  - {x: 0, y: -0.7, z: 0, w: 0.7}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: -1, z: 0, w: 0}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: -0.7, z: 0, w: 0.7}
-  - {x: 0, y: -1, z: 0, w: 0}
-  - {x: 0, y: -0.7, z: 0, w: -0.7}
-  - {x: 0, y: -0.7, z: 0, w: -0.7}
-  - {x: 0, y: -1, z: 0, w: 0}
-  - {x: 0, y: -0.7, z: 0, w: 0.7}
-  fruitLocs:
-  - {x: 1.3, y: 1.5, z: 0}
-  - {x: 0, y: 1.5, z: 1.3}
-  - {x: 1.3, y: 1.5, z: 0}
-  - {x: 0, y: 1.5, z: -1.3}
-  - {x: 1.3, y: 1.5, z: 0}
-  - {x: 1.3, y: 1.5, z: 0}
-  - {x: 0, y: 1.5, z: 1.3}
-  - {x: 0, y: 1.5, z: 1.3}
-  - {x: 0, y: 1.5, z: -1.3}
-  - {x: 0, y: 1.5, z: 1.3}
-  fruitRots:
-  - {x: 0, y: 0.7, z: 0, w: -0.7}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 1, z: 0, w: 0}
-  - {x: 0, y: 0.7, z: 0, w: -0.7}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 0, z: 0, w: 1}
-  - {x: 0, y: 0.7, z: 0, w: 0.7}
+  homePrefab: {fileID: 1252066313767303255, guid: 88467a06eb051d24aad3e5185dce1ac2,
+    type: 3}
+  boxPrefab: {fileID: 87508685256473076, guid: a76803a599af27443844a9fd6b92d2f4, type: 3}
   date: 0
   forest: {fileID: 0}
 --- !u!4 &1688934191
@@ -1055,7 +1029,7 @@ PrefabInstance:
     - target: {fileID: 1252066313767303255, guid: 88467a06eb051d24aad3e5185dce1ac2,
         type: 3}
       propertyPath: m_Name
-      value: house
+      value: home
       objectReference: {fileID: 0}
     - target: {fileID: 2826961447177931332, guid: 88467a06eb051d24aad3e5185dce1ac2,
         type: 3}
@@ -1280,16 +1254,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3994056765173910503, guid: a76803a599af27443844a9fd6b92d2f4,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.14649001
-      objectReference: {fileID: 0}
-    - target: {fileID: 3994056765173910503, guid: a76803a599af27443844a9fd6b92d2f4,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.14649001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a76803a599af27443844a9fd6b92d2f4, type: 3}

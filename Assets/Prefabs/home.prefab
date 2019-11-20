@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 2826961447177931332}
   - component: {fileID: 5310132865576953662}
   m_Layer: 0
-  m_Name: house
+  m_Name: home
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,8 +336,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1252066313767303255}
-  m_LocalRotation: {x: 0, y: 0.9243031, z: 0, w: 0.38165927}
-  m_LocalPosition: {x: -10.94, y: 0, z: 0.76245147}
+  m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
+  m_LocalPosition: {x: 8, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 850090039298798122}
@@ -363,7 +363,7 @@ Transform:
   - {fileID: 7867497704690673184}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 135.127, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 135, z: 0}
 --- !u!95 &5310132865576953662
 Animator:
   serializedVersion: 3

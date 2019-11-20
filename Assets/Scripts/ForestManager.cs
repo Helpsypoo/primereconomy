@@ -5,7 +5,7 @@ using UnityEngine;
 public class ForestManager : MonoBehaviour
 {
     private static int numTrees = 10;
-    private float radius = 10f;
+    private float radius = 12f;
     public GameObject wood;
 
     public List<HarvestableController> allTrees = new List<HarvestableController>();
@@ -31,6 +31,69 @@ public class ForestManager : MonoBehaviour
         return all;
       }
     }
+
+    public List<Vector3> treeLocs;
+    /* = new List<Vector3> {
+      new Vector3 (-1.3f, 0.0f, -5.4f),
+      new Vector3 (6.1f, 0.0f, -9.6f),
+      new Vector3 (-8.7f, 0.0f, 8.5f),
+      new Vector3 (-3.1f, 0.0f, -9.9f),
+      new Vector3 (-10.0f, 0.0f, 0.3f),
+      new Vector3 (2.4f, 0.0f, 4.6f),
+      new Vector3 (-4.7f, 0.0f, -4.4f),
+      new Vector3 (1.4f, 0.0f, 5.6f),
+      new Vector3 (-7.7f, 0.0f, 3.0f),
+      new Vector3 (3.3f, 0.0f, -4.6f)
+    };*/
+
+    public List<Quaternion> treeRots;
+    /* = new List<Quaternion> {
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f)
+    };
+    */
+
+    public List<Vector3> fruitLocs;
+    /* = new List<Vector3> {
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, -1.3f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (0.0f, 1.5f, -1.3f),
+      new Vector3 (0.0f, 1.5f, 1.3f)
+    };
+    */
+
+    public List<Quaternion> fruitRots;
+    /*
+    = new List<Quaternion> {
+      new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, 0.7f, 0.0f, 0.7f)
+    };
+    */
+
+    /*
+    */
 
     // Awake is called before Start
     void Awake()
@@ -129,12 +192,26 @@ public class ForestManager : MonoBehaviour
 
       //Translate and rotate tree GameObject
       Transform treeTransform = newTree.transform;
-      if (allTrees.Count < EconomyManager.instance.treeLocs.Count) {
-        treeTransform.localPosition = EconomyManager.instance.treeLocs[allTrees.Count];
-        treeTransform.localRotation = EconomyManager.instance.treeRots[allTrees.Count];
+      //Debug.Log(treeLocs);
+      //Debug.Log(treeLocs.Count);
+      //Debug.Log(allTrees);
+      //Debug.Log(allTrees.Count);
+      if (treeLocs != null && allTrees.Count < treeLocs.Count) {
+        treeTransform.localPosition = treeLocs[allTrees.Count];
+        treeTransform.localRotation = treeRots[allTrees.Count];
       }
       else {
-        treeTransform.localPosition = new Vector3(Random.Range(-radius, radius), 0, Random.Range(-radius, radius));
+        //Just some starting values that will be false in the checker
+        float x = 10;
+        float z = 10;
+
+        //Generate positions away from the blob's home corner.
+        while (x + z >= 3) {
+          x = Random.Range(-radius, radius);
+          z = Random.Range(-radius, radius);
+        }
+
+        treeTransform.localPosition = new Vector3(x, 0, z);
         int numTurns = Random.Range(0, 4);
         treeTransform.localRotation = Quaternion.Euler(0, 90 * numTurns, 0) * treeTransform.localRotation;
       }

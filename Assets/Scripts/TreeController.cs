@@ -51,9 +51,10 @@ public class TreeController : HarvestableController
       int positionIndex = GetOpenFruitIndex();
       Transform mangoTransform = newMango.transform;
       List<HarvestableController> allFruit = EconomyManager.instance.forest.allFruit;
-      if (allFruit.Count < EconomyManager.instance.fruitLocs.Count) {
-        mangoTransform.localPosition = EconomyManager.instance.fruitLocs[allFruit.Count];
-        mangoTransform.localRotation = EconomyManager.instance.fruitRots[allFruit.Count];
+      if (EconomyManager.instance.forest.fruitLocs != null &&
+              allFruit.Count < EconomyManager.instance.forest.fruitLocs.Count) {
+        mangoTransform.localPosition = EconomyManager.instance.forest.fruitLocs[allFruit.Count];
+        mangoTransform.localRotation = EconomyManager.instance.forest.fruitRots[allFruit.Count];
         //TODO: This doesn't properly manage the fruit's index. In the future,
         //this part should assign the proper index to the fruit, or the somewhat
         //silly use of index should be abandoned elsewhere.

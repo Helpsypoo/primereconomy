@@ -6,16 +6,17 @@ using UnityEngine;
 public class AgentController : MonoBehaviour
 {
     public GameObject home;
+    public GameObject box;
     public ForestManager forest;
 
     private GameObject target = null;
     private GoalType mode = GoalType.Wood;
     private GameObject heldObject = null;
 
-    private float walkSpeed = 15.0f;
-    private float turnSpeed = 15.0f;
-    private float harvestDistance = 3.0f;
-    private float deliverDistance = 0.1f;
+    private float walkSpeed = 10.0f;
+    private float turnSpeed = 10.0f;
+    private float harvestDistance = 1.0f;
+    private float deliverDistance = 2.0f;
 
     private Dictionary<GoalType, int> numsHarvested =
               new Dictionary<GoalType, int>();
@@ -173,7 +174,11 @@ public class AgentController : MonoBehaviour
       //Harvest
       heldObject = target.GetComponent<HarvestableController>().HandleHarvest();
       heldObject.transform.parent = transform;
-      //TODO: Animate movement of heldObject
+      //heldObject.GetComponent<Rigidbody>().useGravity = false;
+      Destroy(heldObject.GetComponent<Rigidbody>());
+
+      IEnumerator coroutine = AdjustGrip(heldObject);
+      StartCoroutine(coroutine);
 
       numsHarvested[mode]++;
 
@@ -182,7 +187,7 @@ public class AgentController : MonoBehaviour
 
     IEnumerator GoDeliver()
     {
-      target = home;
+      target = box;
       while (GoToTargetIfNotThere(deliverDistance))
       {
         yield return null;
@@ -192,8 +197,11 @@ public class AgentController : MonoBehaviour
       }
       //Destroy(heldObject); //If you don't like clutter
       heldObject.transform.parent = EconomyManager.instance.transform;
+      IEnumerator coroutine = DeliveryAnimation(heldObject);
+      StartCoroutine(coroutine);
       heldObject = null;
       target = null;
+
       //TODO: Animate movement of heldObject to container, or something
 
       if (dayOver)
@@ -204,6 +212,48 @@ public class AgentController : MonoBehaviour
       {
         StartCoroutine("GoHarvest");
       }
+    }
+
+    IEnumerator DeliveryAnimation(GameObject good)
+    {
+      //Perhaps a bit hacky, trying to get a demo out
+
+      //Set trigger to open box, stop closing it if you were.
+      Animator boxAnimator = box.GetComponent<Animator>();
+      boxAnimator.ResetTrigger("close");
+      boxAnimator.SetTrigger("open");
+
+      //Put above box
+      Vector3 aboveBox = box.transform.position + new Vector3 (0f, 2f, 0f);
+      Vector3 heading = aboveBox - good.transform.position;
+      float sqrDistance = heading.sqrMagnitude;
+
+      while (sqrDistance > 0) {
+        good.transform.position = Vector3.MoveTowards(
+          good.transform.position,
+          aboveBox,
+          Time.deltaTime * walkSpeed
+        );
+        heading = aboveBox - good.transform.position;
+        sqrDistance = heading.sqrMagnitude;
+
+        yield return null;
+      }
+
+      //Lower into box
+      while (good.transform.position.y > box.transform.position.y) {
+        good.transform.position = Vector3.MoveTowards(
+          good.transform.position,
+          box.transform.position,
+          Time.deltaTime * walkSpeed
+        );
+
+        yield return null;
+      }
+
+      boxAnimator.SetTrigger("close");
+
+      Destroy(good);
     }
 
     IEnumerator GoHome()
@@ -245,6 +295,27 @@ public class AgentController : MonoBehaviour
 
       //Tell manager we're done
       EconomyManager.instance.AgentIsDone(gameObject);
+    }
+
+    IEnumerator AdjustGrip(GameObject good)
+    {
+      //Very similar to other functions. Could likely make a general coroutine
+      //for moving over time.
+      Vector3 goalPos = new Vector3 (0, 1, 1); 
+      Vector3 heading = goalPos - good.transform.localPosition;
+      float sqrDistance = heading.sqrMagnitude;
+
+      while (sqrDistance > 0) {
+        good.transform.localPosition = Vector3.MoveTowards(
+          good.transform.localPosition,
+          goalPos,
+          Time.deltaTime * walkSpeed
+        );
+        heading = goalPos - good.transform.localPosition;
+        sqrDistance = heading.sqrMagnitude;
+
+        yield return null;
+      }
     }
 
     bool GoToTargetIfNotThere(float goalDistance = 0)
