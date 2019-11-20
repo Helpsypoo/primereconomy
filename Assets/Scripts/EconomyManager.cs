@@ -92,12 +92,12 @@ public class EconomyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      //if (Input.GetKeyDown(KeyCode.Space) && forestIsReady == true)
-      if (forestIsReady == true)
-        {
-          ac.StartWorkDay(date);
-          forestIsReady = false;
-        }
+      if (Input.GetKeyDown(KeyCode.Space) && forestIsReady == true)
+      //if (forestIsReady == true)
+      {
+        ac.StartWorkDay(date);
+        forestIsReady = false;
+      }
     }
 
     public void AgentIsDone(GameObject agent)

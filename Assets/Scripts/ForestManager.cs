@@ -5,7 +5,7 @@ using UnityEngine;
 public class ForestManager : MonoBehaviour
 {
     private static int numTrees = 10;
-    private float radius = 12f;
+    private float radius = 11f;
     public GameObject wood;
 
     public List<HarvestableController> allTrees = new List<HarvestableController>();
@@ -32,65 +32,59 @@ public class ForestManager : MonoBehaviour
       }
     }
 
-    public List<Vector3> treeLocs;
-    /* = new List<Vector3> {
-      new Vector3 (-1.3f, 0.0f, -5.4f),
-      new Vector3 (6.1f, 0.0f, -9.6f),
-      new Vector3 (-8.7f, 0.0f, 8.5f),
-      new Vector3 (-3.1f, 0.0f, -9.9f),
-      new Vector3 (-10.0f, 0.0f, 0.3f),
-      new Vector3 (2.4f, 0.0f, 4.6f),
-      new Vector3 (-4.7f, 0.0f, -4.4f),
-      new Vector3 (1.4f, 0.0f, 5.6f),
-      new Vector3 (-7.7f, 0.0f, 3.0f),
-      new Vector3 (3.3f, 0.0f, -4.6f)
-    };*/
-
-    public List<Quaternion> treeRots;
-    /* = new List<Quaternion> {
-      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
-      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
-      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
-      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
-      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
-      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
-      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
-      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
-      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
-      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f)
+    //Temporary manual assignment for considstent locations until I set up
+    //actual recordings
+    public List<Vector3> treeLocs = new List<Vector3> {
+      new Vector3 (-6.4f, 0.0f, -7.2f),
+      new Vector3 (-7.8f, 0.0f, -5.5f),
+      new Vector3 (-11.0f, 0.0f, 1.6f),
+      new Vector3 (7.9f, 0.0f, -8.0f),
+      new Vector3 (-10.2f, 0.0f, 10.7f),
+      new Vector3 (-9.5f, 0.0f, -9.2f),
+      new Vector3 (-3.1f, 0.0f, 2.6f),
+      new Vector3 (0.9f, 0.0f, -3.6f),
+      new Vector3 (-2.7f, 0.0f, -8.3f),
+      new Vector3 (3.1f, 0.0f, -0.3f)
     };
-    */
 
-    public List<Vector3> fruitLocs;
-    /* = new List<Vector3> {
-      new Vector3 (1.3f, 1.5f, 0.0f),
+    public List<Quaternion> treeRots = new List<Quaternion> {
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, -0.7f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f)
+    };
+
+    public List<Vector3> fruitLocs = new List<Vector3> {
       new Vector3 (0.0f, 1.5f, 1.3f),
-      new Vector3 (1.3f, 1.5f, 0.0f),
+      new Vector3 (-1.3f, 1.5f, 0.0f),
+      new Vector3 (-1.3f, 1.5f, 0.0f),
+      new Vector3 (-1.3f, 1.5f, 0.0f),
       new Vector3 (0.0f, 1.5f, -1.3f),
-      new Vector3 (1.3f, 1.5f, 0.0f),
-      new Vector3 (1.3f, 1.5f, 0.0f),
-      new Vector3 (0.0f, 1.5f, 1.3f),
       new Vector3 (0.0f, 1.5f, 1.3f),
       new Vector3 (0.0f, 1.5f, -1.3f),
-      new Vector3 (0.0f, 1.5f, 1.3f)
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (0.0f, 1.5f, 1.3f),
+      new Vector3 (-1.3f, 1.5f, 0.0f)
     };
-    */
 
-    public List<Quaternion> fruitRots;
-    /*
-    = new List<Quaternion> {
+    public List<Quaternion> fruitRots = new List<Quaternion> {
+      new Quaternion (0.0f, -1.0f, 0.0f, 0.0f),
       new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
-      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
       new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
       new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
       new Quaternion (0.0f, 1.0f, 0.0f, 0.0f),
-      new Quaternion (0.0f, 0.7f, 0.0f, -0.7f),
       new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
       new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
-      new Quaternion (0.0f, 0.0f, 0.0f, 1.0f),
+      new Quaternion (0.0f, -0.7f, 0.0f, 0.7f),
       new Quaternion (0.0f, 0.7f, 0.0f, 0.7f)
     };
-    */
 
     /*
     */

@@ -177,6 +177,13 @@ public class AgentController : MonoBehaviour
       //heldObject.GetComponent<Rigidbody>().useGravity = false;
       Destroy(heldObject.GetComponent<Rigidbody>());
 
+      Animator agentAnimator = gameObject.GetComponent<Animator>();
+      if (agentAnimator != null)
+      {
+        agentAnimator.ResetTrigger("drop");
+        agentAnimator.SetTrigger("grab");
+      }
+
       IEnumerator coroutine = AdjustGrip(heldObject);
       StartCoroutine(coroutine);
 
@@ -217,6 +224,13 @@ public class AgentController : MonoBehaviour
     IEnumerator DeliveryAnimation(GameObject good)
     {
       //Perhaps a bit hacky, trying to get a demo out
+
+      Animator agentAnimator = gameObject.GetComponent<Animator>();
+      if (agentAnimator != null)
+      {
+        agentAnimator.ResetTrigger("grab");
+        agentAnimator.SetTrigger("drop");
+      }
 
       //Set trigger to open box, stop closing it if you were.
       Animator boxAnimator = box.GetComponent<Animator>();
@@ -266,6 +280,14 @@ public class AgentController : MonoBehaviour
         yield return null;
       }
 
+      //TODO: remove the waving below after demo
+      Animator agentAnimator = gameObject.GetComponent<Animator>();
+      if (agentAnimator != null)
+      {
+        agentAnimator.ResetTrigger("drop");
+        agentAnimator.SetTrigger("Wave");
+      }
+
       //Log day's outcome
       AgentDay day = activityLog.Last();
       day.numsHarvested = numsHarvested;
@@ -294,14 +316,15 @@ public class AgentController : MonoBehaviour
       }
 
       //Tell manager we're done
-      EconomyManager.instance.AgentIsDone(gameObject);
+      //TODO: Uncomment the line below when demo is complete.
+      //EconomyManager.instance.AgentIsDone(gameObject);
     }
 
     IEnumerator AdjustGrip(GameObject good)
     {
       //Very similar to other functions. Could likely make a general coroutine
       //for moving over time.
-      Vector3 goalPos = new Vector3 (0, 1, 1); 
+      Vector3 goalPos = new Vector3 (0, 1, 1);
       Vector3 heading = goalPos - good.transform.localPosition;
       float sqrDistance = heading.sqrMagnitude;
 
