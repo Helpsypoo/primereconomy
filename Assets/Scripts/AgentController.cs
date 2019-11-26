@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AgentController : MonoBehaviour
 {
+    private static System.Random rand = new System.Random();
+
     public GameObject home;
     public GameObject box;
     public ForestManager forest;
@@ -18,13 +20,13 @@ public class AgentController : MonoBehaviour
     private float harvestDistance = 1.0f;
     private float deliverDistance = 2.0f;
 
-    private Dictionary<GoalType, int> numsHarvested =
-              new Dictionary<GoalType, int>();
+    private Dictionary<GoalType, float> numsHarvested =
+              new Dictionary<GoalType, float>();
 
-    //half hour increments if the work day is eight hours
-    private const float timeAllocationRatioIncrement = 0.0625f;
-    private float defaultAlloc = 5 * timeAllocationRatioIncrement;
-    private float woodCollectionTimeRatio;
+    private int defaultGoal = 3;
+    private int goalFruitHarvest;
+
+    private double explorationChance = 0.2;
 
     private float collectionTime = 20.0f; //seconds
     //public float accelerationFactor = 1.0f; //For speeding up sims later on.
@@ -32,7 +34,7 @@ public class AgentController : MonoBehaviour
     private bool dayOver = true;
 
     //Memory of day outcomes
-    public List<AgentDay> activityLog = new List<AgentDay>();
+    public AgentLog activityLog = new AgentLog();
 
     void Awake()
     {
@@ -53,86 +55,119 @@ public class AgentController : MonoBehaviour
       }
     }
 
-    float Utility(Dictionary<GoalType, int> nums)
+
+    float Utility(Dictionary<GoalType, float> nums)
     {
-      int wood = nums[GoalType.Wood];
-      int fruit = nums[GoalType.Fruit];
-      return Mathf.Log(fruit + 1, 2) + Mathf.Log(wood + 1, 2);
+      float wood = nums[GoalType.Wood];
+      float fruit = nums[GoalType.Fruit];
+      return 1.5f * Mathf.Log(fruit + 1, 2) + 1 * Mathf.Log(wood + 1, 2);
     }
 
-    void DetermineTimeAllocation()
+    void DetermineFruitHarvestGoal()
     {
-      if (activityLog.Count() == 0)
+      //If no experience, just go with default
+      if (activityLog.IsLogEmpty())
       {
-        woodCollectionTimeRatio = defaultAlloc;
+        goalFruitHarvest = defaultGoal;
         return;
       }
 
-      //TODO: Maybe refactor this
-      float bestUtility = 0f;
-      AgentDay bestDay = null;
-      float lowestAlloc = 1.0f; //To be replaced
-      float highestAlloc = 0.0f; //To be replaced
+      //Find goal with the best result so far
+      float maxUtility = 0f;
+      int bestGoal = 0;
+      int lowestGoal = int.MaxValue;
+      int highestGoal = 0;
+      //TODO: Find a way to clean up the messiness caused by the fact Utility()
+      //takes a different type of dictionary than how allocationCandidates are
+      //stored
+      foreach (KeyValuePair<int, float> entry in
+                                      activityLog.summary.allocationCandidates)
+      {
+        Dictionary<GoalType, float> fakeDay = new Dictionary<GoalType, float>();
+        fakeDay.Add(GoalType.Fruit, (float)entry.Key);
+        fakeDay.Add(GoalType.Wood, (float)entry.Value);
 
-      foreach (AgentDay day in activityLog)
-      {
-        //lowestAlloc?
-        if (day.timeAllocationRatio < lowestAlloc)
+        float util = Utility(fakeDay);
+        if (util > maxUtility)
         {
-          lowestAlloc = day.timeAllocationRatio;
+          maxUtility = util;
+          bestGoal = (int)fakeDay[GoalType.Fruit];
         }
-        //highestAlloc?
-        if (day.timeAllocationRatio > highestAlloc)
-        {
-          highestAlloc = day.timeAllocationRatio;
-        }
-        //bestDay?
-        if (day.utility > bestUtility)
-        {
-          bestUtility = day.utility;
-          bestDay = day;
-        }
-        //If equal to best day, take extreme allocs for exploration.
-        else if (day.utility == bestUtility &&
-                 (day.timeAllocationRatio == lowestAlloc ||
-                  day.timeAllocationRatio == highestAlloc)
-                )
-        {
-          bestDay = day;
-        }
-      }
-      //Check whether bestDay is at an allocation extreme
-      bool exploreUp = true;
-      bool exploreDown = true;
 
-      if (bestDay.timeAllocationRatio != highestAlloc) {exploreUp = false;}
-      if (bestDay.timeAllocationRatio != lowestAlloc) {exploreDown = false;}
+        highestGoal = (int)Mathf.Max(fakeDay[GoalType.Fruit], highestGoal);
+        lowestGoal = (int)Mathf.Min(fakeDay[GoalType.Fruit], lowestGoal);
+      }
+      Debug.Log(bestGoal.ToString() +
+                ", " + highestGoal.ToString() +
+                ", " + lowestGoal.ToString());
 
-      float bestAlloc = bestDay.timeAllocationRatio;
-      //Decide where to explore
-      if (exploreUp && exploreDown)
+      //If the best result so far comes from the highest or lowest goal, keep
+      //exploring. Otherwise, use the middle goal.
+      if (bestGoal == highestGoal)
       {
-        woodCollectionTimeRatio = bestAlloc +
-          (Random.Range(0, 2) * 2 - 1) * timeAllocationRatioIncrement;
+        goalFruitHarvest = activityLog.summary.highestGoalTried + 1;
+        return;
       }
-      else if (exploreUp)
+      else if (bestGoal == lowestGoal)
       {
-        woodCollectionTimeRatio = bestAlloc + timeAllocationRatioIncrement;
-      }
-      else if (exploreDown)
-      {
-        woodCollectionTimeRatio = bestAlloc - timeAllocationRatioIncrement;
+        goalFruitHarvest = activityLog.summary.lowestGoalTried - 1;
+        return;
       }
       else
       {
-        woodCollectionTimeRatio = bestAlloc;
+        /*
+        Debug.Log("Best goal is " + bestGoal.ToString() +
+                  ". Highest goal is " + highestGoal.ToString() +
+                  ". Lowest goal is " + lowestGoal.ToString() +
+                  ", sitting tight."
+        );
+        */
+
+        //Chance of exploring anyway, since nearby strategies could be better
+        //with the non-deterministic nature.
+        double variationRoll = rand.NextDouble();
+        if (variationRoll < explorationChance / 2) //Over two, because half chance
+        {
+          //Go higher
+          int nextHigher = int.MaxValue;
+          foreach (KeyValuePair<int, float> entry in activityLog.summary.allocationCandidates)
+          {
+            int possibleGoal = entry.Key;
+            if (possibleGoal >= bestGoal && possibleGoal <= nextHigher)
+            {
+              nextHigher = possibleGoal;
+            }
+          }
+          bestGoal = nextHigher;
+        }
+        else if (variationRoll < explorationChance)
+        {
+          //Go lower
+          int nextLower = 0;
+          foreach (KeyValuePair<int, float> entry in activityLog.summary.allocationCandidates)
+          {
+            int possibleGoal = entry.Key;
+            if (possibleGoal <= bestGoal && possibleGoal >= nextLower)
+            {
+              nextLower = possibleGoal;
+            }
+          }
+          bestGoal = nextLower;
+        }
+
+        goalFruitHarvest = bestGoal;
+        return;
       }
+      //TODO: make it so the goal doesn't shoot past the harvestable number of
+      //fruit, likely by assigning a negative wood yield in cases where the fruit
+      //goal is not met.
+      //If it becomes a problem. /shrug
     }
 
     public void StartWorkDay(int date)
     {
-      DetermineTimeAllocation();
-      activityLog.Add(new AgentDay(date, woodCollectionTimeRatio));
+      DetermineFruitHarvestGoal();
+      activityLog.AddDay(new AgentDay(date, goalFruitHarvest));
 
       //Reset state
       target = null;
@@ -149,13 +184,13 @@ public class AgentController : MonoBehaviour
     IEnumerator GoHarvest()
     {
       //Check time allocation
-      if (Time.time - startTime < woodCollectionTimeRatio * collectionTime)
+      if (numsHarvested[GoalType.Fruit] < goalFruitHarvest)
       {
-        mode = GoalType.Wood;
+        mode = GoalType.Fruit;
       }
       else
       {
-        mode = GoalType.Fruit;
+        mode = GoalType.Wood;
       }
 
       //Pick target
@@ -281,43 +316,36 @@ public class AgentController : MonoBehaviour
       }
 
       //TODO: remove the waving below after demo
+      /*
       Animator agentAnimator = gameObject.GetComponent<Animator>();
       if (agentAnimator != null)
       {
         agentAnimator.ResetTrigger("drop");
         agentAnimator.SetTrigger("Wave");
       }
+      */
 
       //Log day's outcome
-      AgentDay day = activityLog.Last();
-      day.numsHarvested = numsHarvested;
-      day.utility = Utility(numsHarvested);
-
-      //Testing
-      //Agent behavior assumes deterministic harvesting. Check that the new day
-      //is not evidence of variation. Warn if necessary.
-      //Will mostly function as a reminder to update agent behavior if harvesting
-      //is changed to something nondeterministic for visual/freshness reasons.
-      foreach (AgentDay otherDay in activityLog){
-        if (day.timeAllocationRatio == otherDay.timeAllocationRatio &&
-            day.utility != otherDay.utility)
-        {
-          string warning = "Day " + day.date.ToString() + " yielded " +
-            day.numsHarvested[GoalType.Wood].ToString() + " trees and " + day.numsHarvested[GoalType.Fruit].ToString() +
-            " mangoes with a ratio of " + day.timeAllocationRatio.ToString() +
-            ".@ Day " + otherDay.date.ToString() + " yielded " +
-            otherDay.numsHarvested[GoalType.Wood].ToString() + " trees and " + otherDay.numsHarvested[GoalType.Fruit].ToString() +
-            " mangoes with a ratio of " + otherDay.timeAllocationRatio.ToString() +
-            ".";
-          warning = warning.Replace("@", System.Environment.NewLine);
-
-          Debug.LogWarning(warning);
-        }
-      }
+      activityLog.AddLatestHarvest(numsHarvested);
 
       //Tell manager we're done
-      //TODO: Uncomment the line below when demo is complete.
-      //EconomyManager.instance.AgentIsDone(gameObject);
+      EconomyManager.instance.AgentIsDone(gameObject);
+
+      //TODO Delete string builder after testing
+      var avgsListString = new System.Text.StringBuilder();
+      avgsListString.AppendLine("Average utilities by allocation ");
+
+      foreach (KeyValuePair<int, float> entry in activityLog.summary.avgWoods)
+      {
+        Dictionary<GoalType, float> fakeDay = new Dictionary<GoalType, float>();
+        fakeDay.Add(GoalType.Wood, entry.Value);
+        fakeDay.Add(GoalType.Fruit, entry.Key);
+        float util = Utility(fakeDay);
+        avgsListString.AppendLine(
+          entry.Key.ToString() + ", " + util.ToString()
+        );
+      }
+      Debug.Log(avgsListString);
     }
 
     IEnumerator AdjustGrip(GameObject good)

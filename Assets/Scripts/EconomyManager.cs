@@ -92,8 +92,8 @@ public class EconomyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      if (Input.GetKeyDown(KeyCode.Space) && forestIsReady == true)
-      //if (forestIsReady == true)
+      //if (Input.GetKeyDown(KeyCode.Space) && forestIsReady == true)
+      if (forestIsReady == true)
       {
         ac.StartWorkDay(date);
         forestIsReady = false;
@@ -109,17 +109,20 @@ public class EconomyManager : MonoBehaviour
       date++;
 
       //Print summary to Unity console
-      AgentDay lastLog = ac.activityLog.Last();
+      //TODO: Make activityLog and daysLog private and delete code below once this kind of
+      //logging is no longer useful.
+      AgentDay lastLog = ac.activityLog.daysLog.Last();
       int lastDate = lastLog.date; //Should be same as date
-      float lastRatio = lastLog.timeAllocationRatio;
-      int trees = lastLog.numsHarvested[GoalType.Wood];
-      int mangoes = lastLog.numsHarvested[GoalType.Fruit];
+      int lastGoal = lastLog.goalFruitHarvest;
+      float trees = lastLog.numsHarvested[GoalType.Wood];
+      float mangoes = lastLog.numsHarvested[GoalType.Fruit];
       Debug.Log(
         "On day " + lastDate.ToString() + ", agent harvested " +
         trees.ToString() + " trees and " + mangoes.ToString() +
-        " mangoes. By spending " + lastRatio.ToString() +
-        " of its time on wood collection."
+        " mangoes. By going for " + lastGoal.ToString() +
+        " mangoes."
       );
+
 
 
       //ReplenishForest

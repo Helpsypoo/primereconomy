@@ -32,6 +32,7 @@ public class ForestManager : MonoBehaviour
       }
     }
 
+
     //Temporary manual assignment for considstent locations until I set up
     //actual recordings
     public List<Vector3> treeLocs = new List<Vector3> {
@@ -87,6 +88,11 @@ public class ForestManager : MonoBehaviour
     };
 
     /*
+    //Uncomment for randomized forest
+    public List<Vector3> treeLocs;
+    public List<Quaternion> treeRots;
+    public List<Vector3> fruitLocs;
+    public List<Quaternion> fruitRots;
     */
 
     // Awake is called before Start
