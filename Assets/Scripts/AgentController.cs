@@ -55,12 +55,14 @@ public class AgentController : MonoBehaviour
       }
     }
 
-
-    float Utility(Dictionary<GoalType, float> nums)
+    //float Utility(Dictionary<GoalType, float> nums)
+    public float Utility(float fruit, float wood)
     {
-      float wood = nums[GoalType.Wood];
-      float fruit = nums[GoalType.Fruit];
-      return 1.5f * Mathf.Log(fruit + 1, 2) + 1 * Mathf.Log(wood + 1, 2);
+      //float wood = nums[GoalType.Wood];
+      //float fruit = nums[GoalType.Fruit];
+      float scalerY = 0.25f;
+      float scalerX = 10f;
+      return scalerY * (1.5f * Mathf.Log(scalerX * fruit + 1, 10) + 1 * Mathf.Log(scalerX * wood + 1, 10));
     }
 
     void DetermineFruitHarvestGoal()
@@ -83,11 +85,14 @@ public class AgentController : MonoBehaviour
       foreach (KeyValuePair<int, float> entry in
                                       activityLog.summary.allocationCandidates)
       {
+
         Dictionary<GoalType, float> fakeDay = new Dictionary<GoalType, float>();
         fakeDay.Add(GoalType.Fruit, (float)entry.Key);
         fakeDay.Add(GoalType.Wood, (float)entry.Value);
+        //float util = Utility(fakeDay);
 
-        float util = Utility(fakeDay);
+
+        float util = Utility(entry.Key, entry.Value);
         if (util > maxUtility)
         {
           maxUtility = util;
@@ -337,10 +342,14 @@ public class AgentController : MonoBehaviour
 
       foreach (KeyValuePair<int, float> entry in activityLog.summary.avgWoods)
       {
+        /*
         Dictionary<GoalType, float> fakeDay = new Dictionary<GoalType, float>();
         fakeDay.Add(GoalType.Wood, entry.Value);
         fakeDay.Add(GoalType.Fruit, entry.Key);
         float util = Utility(fakeDay);
+        */
+
+        float util = Utility(entry.Key, entry.Value);
         avgsListString.AppendLine(
           entry.Key.ToString() + ", " + util.ToString()
         );

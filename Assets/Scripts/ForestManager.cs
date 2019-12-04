@@ -8,16 +8,37 @@ public class ForestManager : MonoBehaviour
     private float radius = 11f;
     public GameObject wood;
 
+    public List<HarvestableController> treelessFruits {
+      get {
+        var fruits = new List<HarvestableController>();
+        foreach (Transform transform in EconomyManager.instance.transform) {
+          if (transform.tag == "fruit") {
+            fruits.Add(transform.GetComponent<HarvestableController>());
+          }
+        }
+        Debug.Log(fruits.Count);
+        return fruits;
+      }
+    }
+
     public List<HarvestableController> allTrees = new List<HarvestableController>();
     public List<HarvestableController> allFruit {
       get {
         var fruit = new List<HarvestableController>();
         foreach (TreeController t in allTrees) {
           foreach (var f in t.fruits)
+          {
             if (f != null) {
               fruit.Add(f);
             }
           }
+        }
+        foreach (HarvestableController f in treelessFruits)
+        {
+          if (f != null) {
+            fruit.Add(f);
+          }
+        }
         return fruit;
       }
     }
@@ -182,6 +203,10 @@ public class ForestManager : MonoBehaviour
           }
         }
         tc.GrowMangoes();
+      }
+      foreach (HarvestableController f in treelessFruits)
+      {
+        Destroy(f.gameObject);
       }
     }
 
