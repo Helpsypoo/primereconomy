@@ -156,12 +156,6 @@ MonoBehaviour:
   m_Script: {fileID: -910582366, guid: 1741f56c22154746ae9dc695200288e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &434796616 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9212833953478759608, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
-    type: 3}
-  m_PrefabInstance: {fileID: 661569494}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &661569494
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,7 +391,7 @@ PrefabInstance:
     - target: {fileID: 5296750429065225899, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5296750429065225899, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
         type: 3}
@@ -507,7 +501,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: -6.82, y: 14.45, z: 11.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -554,52 +548,6 @@ MonoBehaviour:
   m_Script: {fileID: -910582366, guid: 1741f56c22154746ae9dc695200288e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &852696790
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 852696792}
-  - component: {fileID: 852696791}
-  m_Layer: 0
-  m_Name: GraphContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &852696791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852696790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edec200e9ea2d8548a2a64d68f2f8b46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 434796616}
-  graphPrefab: {fileID: 3940124938475959579, guid: 446a214e1103ca140833d940101d0488,
-    type: 3}
---- !u!4 &852696792
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852696790}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6268806, y: 1.0868979, z: -1.6629715}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &931259746 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 935449912622580128, guid: 2d7d41f30b052df43be0c3b1b0a67e73,
@@ -760,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: -112464798, guid: 1741f56c22154746ae9dc695200288e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _savedGUID: 2645187566
+  _savedGUID: 2668056519
   CompileShaderAutomatically: 1
   _savedActiveObjects:
   - {fileID: 705507996}
@@ -783,8 +731,8 @@ MonoBehaviour:
   - {fileID: 1451494841}
   - {fileID: 1821284457}
   - {fileID: 1093031928}
-  _lastShaderPath: Assets\Scenes/Shaders/Generated\_SampleScene_2645187566.generated.shader
-  _lastShader: {fileID: 4800000, guid: 41e6f54b79a737244bd2794991fc4ed3, type: 3}
+  _lastShaderPath: Assets\Scenes/Shaders/Generated\_SampleScene_2668056519.generated.shader
+  _lastShader: {fileID: 4800000, guid: 9026c6e5ec9482f408f63eee8cd2a508, type: 3}
   Steps: 160
   AmbientColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   Fog: 0
@@ -827,7 +775,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1335239961 stripped
 MonoBehaviour:
@@ -870,7 +818,7 @@ Transform:
   m_Children:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 16, y: -45, z: 0}
 --- !u!114 &1448322266 stripped
 MonoBehaviour:
@@ -1349,7 +1297,7 @@ PrefabInstance:
     - target: {fileID: 5989915685074411286, guid: 74409238722e67f428ecfbc2ce6e9763,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5989915685074411286, guid: 74409238722e67f428ecfbc2ce6e9763,
         type: 3}

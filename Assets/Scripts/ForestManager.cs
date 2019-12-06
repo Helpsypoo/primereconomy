@@ -16,7 +16,6 @@ public class ForestManager : MonoBehaviour
             fruits.Add(transform.GetComponent<HarvestableController>());
           }
         }
-        Debug.Log(fruits.Count);
         return fruits;
       }
     }
@@ -128,12 +127,39 @@ public class ForestManager : MonoBehaviour
 
     }
 
-    public void PrepForest()
+    public IEnumerator PrepForest(float duration)
     {
+      float delay = (float) duration / numTrees;
+
       for (int i = 0; i < numTrees; i++)
       {
         AddTree();
+        yield return new WaitForSeconds(delay);
       }
+
+      //Wait until animations are done.
+      //TODO: Figure out how to run code on animate state exit.
+      bool animating = true;
+      do
+      {
+        animating = false;
+        foreach (TreeController tc in allTrees)
+        {
+          Animator anim = tc.GetComponent<Animator>();
+          if (anim.GetCurrentAnimatorStateInfo(0).IsName("Bounce In"))
+          {
+            animating = true;
+            break;
+          }
+        }
+        yield return null;
+      } while (animating == true);
+
+      //TODO: Make forests aware of own ready state, prepping for multi-forest
+      //situations
+      EconomyManager.instance.forestIsReady = true;
+
+
 
       //Temporary for finding a fixed set of coords
       //In place of actual recordings and recreations
@@ -169,25 +195,17 @@ public class ForestManager : MonoBehaviour
       Debug.Log(fruitRots);
     }
 
-    public void ReplenishForest()
+    public IEnumerator ReplenishForest(float duration)
+    //Not really duration, more of a start window.
     {
+      float delay = (float) duration / numTrees;
+
       foreach (TreeController tc in allTrees)
       {
         //Regrow harvested trees and mangoes, handle mangoes on ground
         if (tc.harvested == true)
         {
           tc.RegrowTree();
-
-          //Set all of harvested tree's fruit to null, destroy unharvested fruit
-          for (int j = 0; j < tc.fruits.Length; j++)
-          {
-            if (tc.fruits[j] != null &&
-                tc.fruits[j].harvested == false)
-              {
-                Destroy(tc.fruits[j]);
-              }
-            tc.fruits[j] = null;
-          }
         }
         else {
           //Make sure harvested fruits are out of tree's fruit array
@@ -202,25 +220,45 @@ public class ForestManager : MonoBehaviour
               }
           }
         }
-        tc.GrowMangoes();
+        StartCoroutine(tc.GrowMangoes());
+
+        yield return new WaitForSeconds(delay);
       }
       foreach (HarvestableController f in treelessFruits)
       {
-        Destroy(f.gameObject);
+        StartCoroutine(f.Disappear());
       }
+
+      //Wait until animations are done.
+      //TODO: Figure out how to run code on animate state exit.
+      bool animating = true;
+      do
+      {
+        animating = false;
+        foreach (TreeController tc in allTrees)
+        {
+          Animator anim = tc.GetComponent<Animator>();
+          if (anim.GetCurrentAnimatorStateInfo(0).IsName("Bounce In"))
+          {
+            animating = true;
+            break;
+          }
+        }
+        yield return null;
+      } while (animating == true);
+
+      //TODO: Make forests aware of own ready state, prepping for multi-forest
+      //situations
+      EconomyManager.instance.forestIsReady = true;
     }
 
     void AddTree()
     {
       //Create tree
-      GameObject newTree = Instantiate(EconomyManager.instance.treePrefab, gameObject.transform);
+      GameObject newTree = Instantiate(EconomyManager.instance.treePrefab);//, gameObject.transform);
 
       //Translate and rotate tree GameObject
       Transform treeTransform = newTree.transform;
-      //Debug.Log(treeLocs);
-      //Debug.Log(treeLocs.Count);
-      //Debug.Log(allTrees);
-      //Debug.Log(allTrees.Count);
       if (treeLocs != null && allTrees.Count < treeLocs.Count) {
         treeTransform.localPosition = treeLocs[allTrees.Count];
         treeTransform.localRotation = treeRots[allTrees.Count];
@@ -244,6 +282,6 @@ public class ForestManager : MonoBehaviour
       //Manage TreeController
       TreeController tc = newTree.GetComponent<TreeController>();
       allTrees.Add(tc);
-      tc.GrowMangoes();
+      StartCoroutine(tc.GrowMangoes());
     }
 }

@@ -16,10 +16,12 @@ public class TreeController : HarvestableController
     private float mangoDistance = 1.3f;
     private float mangoHeight = 1.5f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    private Animator animator;
 
+    // Start is called before the first frame update
+    void Awake()
+    {
+      animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -34,13 +36,24 @@ public class TreeController : HarvestableController
       harvested = false;
     }
 
-    public void GrowMangoes()
+    public IEnumerator GrowMangoes()
     {
+
+      while (animator.GetCurrentAnimatorStateInfo(0).IsName("Bounce In"))
+      {
+        yield return null;
+      }
+
       int numMangoes = fruits.Count(x => x != null);
       for (int i = 0; i < mangoYield - numMangoes; i++)
       {
         AddMango();
       }
+    }
+
+    protected override void OnDisappear()
+    {
+      gameObject.SetActive(false);
     }
 
     void AddMango()
@@ -101,6 +114,7 @@ public class TreeController : HarvestableController
 
     public override GameObject HandleHarvest()
     {
+      StartCoroutine(Disappear());
       Vector3 logSpawnPos = new Vector3(gameObject.transform.position.x, logSpawnHeight,
                                                         gameObject.transform.position.z);
 
@@ -119,7 +133,6 @@ public class TreeController : HarvestableController
       }
 
       harvested = true;
-      gameObject.SetActive(false);
 
       return log;
     }

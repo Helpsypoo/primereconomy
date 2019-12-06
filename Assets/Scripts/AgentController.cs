@@ -29,7 +29,6 @@ public class AgentController : MonoBehaviour
     private double explorationChance = 0.2;
 
     private float collectionTime = 20.0f; //seconds
-    //public float accelerationFactor = 1.0f; //For speeding up sims later on.
     private float startTime;
     private bool dayOver = true;
 

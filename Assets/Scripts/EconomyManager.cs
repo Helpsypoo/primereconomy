@@ -19,16 +19,19 @@ public class EconomyManager : MonoBehaviour
     public GameObject homePrefab;
     public GameObject boxPrefab;
 
+    private float forestGrowthDuration = 1.0f; //Rough. Used to distribute start times of tree appearance animations
+
     public int date;
 
-    private bool forestIsReady;
+    public bool forestIsReady;
     public ForestManager forest;
 
     private AgentController ac;
-    //private Vector3 homePosition;
 
     void Awake()
     {
+      Time.timeScale = 1;
+
       if (instance == null) {
         instance = this;
       }
@@ -43,8 +46,7 @@ public class EconomyManager : MonoBehaviour
       forestGO.transform.position = new Vector3(0, 0, 0);
       forestGO.transform.parent = transform;
       forest = forestGO.AddComponent<ForestManager>();
-      forest.PrepForest();
-      forestIsReady = true;
+      PrepPhase();
 
       //Spawn agent
       //Raymarching toolkit doesn't support spawning of raymarching objects
@@ -123,10 +125,21 @@ public class EconomyManager : MonoBehaviour
         " mangoes."
       );
 
+      ReplenishPhase();
+    }
 
+    void PrepPhase()
+    {
+      //PrepForest
+      StartCoroutine(forest.PrepForest(forestGrowthDuration));//forestGrowthDuration);
+    }
+
+    void ReplenishPhase()
+    {
+      //I was going to do more stuff here, but now it's in ForestManager.cs.
+      //Maybe this will be good for something? ¯\_(ツ)_/¯
 
       //ReplenishForest
-      forest.ReplenishForest();
-      forestIsReady = true;
+      StartCoroutine(forest.ReplenishForest(forestGrowthDuration));
     }
 }
