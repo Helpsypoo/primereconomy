@@ -27,6 +27,9 @@ public class EconomyManager : MonoBehaviour
     public ForestManager forest;
 
     private AgentController ac;
+    private Vector3 agentInitialPosition = new Vector3 (0.74f, 0f, 0.19f);
+    private Vector3 agentInitialEulerRotation = new Vector3 (0f, 143f, 0f);
+
 
     void Awake()
     {
@@ -57,8 +60,12 @@ public class EconomyManager : MonoBehaviour
       if (agent == null)
       {
         agent = Instantiate(agentPrefab);
+        agent.transform.parent = GameObject.Find("ground").transform;
       }
-      agent.transform.parent = transform;
+      agent.transform.localPosition = agentInitialPosition;
+      agent.transform.eulerAngles = agentInitialEulerRotation;
+
+
       ac = agent.AddComponent<AgentController>();
       ac.forest = forest;
 

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5938811666055263938}
   - component: {fileID: 96384108210457147}
   - component: {fileID: 4736626548481778062}
-  - component: {fileID: 2092883538}
   m_Layer: 0
   m_Name: log
   m_TagString: Untagged
@@ -27,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831481640832122599}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 3.8132873, y: 0.66, z: -0.97}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5938811666055263938
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -41,7 +40,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831481640832122599}
-  m_Mesh: {fileID: 8664373469294599787, guid: 567fc5e5a15d66441b2381ad75931925, type: 3}
+  m_Mesh: {fileID: -7387706064836869012, guid: 567fc5e5a15d66441b2381ad75931925, type: 3}
 --- !u!23 &96384108210457147
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -61,7 +60,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 9089535c34ff3cd44ab0ceaae5246880, type: 2}
   - {fileID: 2100000, guid: 048bbbf264d057f4a96e418df0689ff5, type: 2}
-  - {fileID: 2100000, guid: ced5855eb5a10204caaa30a83fda17b5, type: 2}
+  - {fileID: 2100000, guid: 874a6e013767e1040914edbc573885e1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,17 +100,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!64 &2092883538
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831481640832122599}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 8664373469294599787, guid: 567fc5e5a15d66441b2381ad75931925, type: 3}
